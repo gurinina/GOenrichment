@@ -7,10 +7,12 @@
     @param curr_exp name of exp, usually after the sample name so set to colnames(mat)[coln]
     @param sig significance threshold of fitness defect score, default is 1
     @param fdrThresh fdr threshold for significance cutoff of enrichments, default = 0.2
-    @param bp_path path of gmt file alternatively bp_input, gmt file itself,
-    @param go_path path of file with GOID and terms, alternatively go_input, the file itself
-    @param minGeneSetSize  lower limit on geneSetSize, default 5
-    @param minGeneSetSize, upper limit on geneSetSize,,default 300}
+    @param bp_path path of gmt file
+    @param bp_input alternatively th gmt file itself
+    @param go_path path of file with GOID and terms path of gmt file alternatively bp_input, gmt file itself,
+    @param go_input alternatively the file with GOID and terms itself
+    @param minGeneSetSize lower limit on geneSetSize, default 5
+    @param maxGeneSetSize upper limit on geneSetSize,,default 300}
 \usage{
 runGORESP(
   mat,

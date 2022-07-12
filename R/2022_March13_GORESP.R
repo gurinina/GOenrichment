@@ -914,18 +914,17 @@ visSetup = function(enrichInfo, edgeMat, fontsize = 22, fontface = "Arial") {
 #' considered redundant.
 #' @export
 runNetwork <- function(nodes,edges){
-  suppressPackageStartupMessages({library(igraph)
-  library(visNetwork)})
-  visNetwork(nodes,edges, width = "100%") %>%
-    visNodes(shadow=list(enabled = T,size = 25)) %>%
-    visOptions(
+
+  visNetwork::visNetwork(nodes,edges, width = "100%") %>%
+    visNetwork::visNodes(shadow=list(enabled = T,size = 25)) %>%
+    visNetwork::visOptions(
       highlightNearest = list(enabled = T, degree = 5, hover = T),
       nodesIdSelection = list(enabled = TRUE, values = names,
                               style = 'width: 250px;color: #000066;'),
       selectedBy = list(variable="FDR",
                         style = 'width: 250px;color: #000066;')) %>%
 
-    visIgraphLayout(type = "full")
+    vvisNetwork::visIgraphLayout(type = "full")
 
 
 }

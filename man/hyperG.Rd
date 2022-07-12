@@ -28,7 +28,7 @@ hyperG(
 - third column = fitness scores, descending order
 - can be NULL}
 
-\item{minSetSize}{maxSetSize max number of genes in geneSets (after restricting to the gene universe)}
+\item{maxSetSize}{max number of genes in geneSets (after restricting to the gene universe)}
 
 \item{uniSize}{the number of genes in the universe}
 }

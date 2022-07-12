@@ -8,6 +8,11 @@ to genesets comprised at least 5 (minGeneSetSize) and not more than 300 genes (m
 \usage{
 runNetwork(nodes, edges)
 }
+\arguments{
+\item{nodes}{dataframe returned from visSetup, "nodes" see ?? visSetup}
+
+\item{edges}{dataframe returned from visSetup, "edges" see ?? visSetup}
+}
 \value{
 network
 The significance of the enrichments was estimated using the hypergeometric test
