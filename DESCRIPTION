@@ -1,7 +1,7 @@
 Package: omic.data
 Type: Package
 Title: GO enrichment visualization tool
-Version: 0.3.0
+Version: 0.4.0
 Author: Guri Giaever
 Maintainer: Guri Giaever <g.gaiever@ubc.ca>
 Description: A network visualization tool for GO enrichments.
