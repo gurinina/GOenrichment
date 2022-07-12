@@ -924,7 +924,7 @@ runNetwork <- function(nodes,edges){
       selectedBy = list(variable="FDR",
                         style = 'width: 250px;color: #000066;')) %>%
 
-    vvisNetwork::visIgraphLayout(type = "full")
+    visNetwork::visIgraphLayout(type = "full")
 
 
 }
