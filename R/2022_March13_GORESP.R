@@ -818,7 +818,7 @@ visSetup = function(enrichInfo, edgeMat, fontsize = 22, fontface = "Arial") {
   if (is.null(e) & !is.null(n)) {
     gr = igraph::make_empty_graph(nrow(enrichInfo))
     v = gr
-    V(v)$color.background = n$cluster
+    igraph::V(v)$color.background = n$cluster
     v = igraph::set_vertex_attr(v, "label", value = n$formattedLabel)
 
   }
@@ -828,7 +828,7 @@ visSetup = function(enrichInfo, edgeMat, fontsize = 22, fontface = "Arial") {
     w = which(names(e) == "label")
     let = igraph::graph_from_data_frame(e[, -w], vertices = n, directed = F)
     v = igraph::set_vertex_attr(let, "label", value = n$formattedLabel)
-    V(v)$color.background = n$cluster
+    igraph::V(v)$color.background = n$cluster
   }
 
   vis = visNetwork::toVisNetworkData(v)
@@ -868,7 +868,7 @@ visSetup = function(enrichInfo, edgeMat, fontsize = 22, fontface = "Arial") {
   vis$nodes$overlapGenes = n$overlapGenes[m]
   vis$nodes$label = vis$nodes$formattedLabel
   vis$nodes$color.border = "black"
-  vis$nodes = vis$nodes %>% arrange(label)
+  vis$nodes = dplyr::arrange(vis$nodes,label)
   if (nrow(vis$edges) > 0)
     vis$edges$color = "black"
 
