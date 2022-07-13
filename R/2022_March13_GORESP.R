@@ -21,11 +21,11 @@
 #'     @param sig significance threshold of fitness defect score, default is 1
 #'     @param fdrThresh fdr threshold for significance cutoff of enrichments, default = 0.2
 #'     @param bp_path path of gmt file
-#'     @param bp_input alternatively th gmt file itself
+#'     @param bp_input alternatively th gmt file itself, **Note: bp_path and bp_input can't both be NULL
 #'     @param go_path path of file with GOID and terms path of gmt file alternatively bp_input, gmt file itself,
-#'     @param go_input alternatively the file with GOID and terms itself
-#'     @param minGeneSetSize lower limit on geneSetSize, default 5
-#'     @param maxGeneSetSize upper limit on geneSetSize,,default 300
+#'     @param go_input alternatively the file with GOID and terms itself **Note: go_path and go_input can both be NULL
+#'     @param minGeneSetSize lower limit on the number of genes in a geneset included in the analysis, default = 5
+#'     @param maxGeneSetSize upper limit on the number of genes in a geneset included in the analysis,default = 300
 #'
 #'
 #'     RETURNS two dataframes of enrichment results, sorted by increasing FDR value.
@@ -49,53 +49,15 @@
 #'	            dataframe and serve to show the overlap between terms for downstream visualization purposes
 #'	            and for understanding the relationship between terms;
 #' @export
-runGORESP = function (mat,coln,curr_exp = colnames(mat)[coln], sig = 1, fdrThresh = 0.2, bp_path = NULL,bp_input = GOBPgmt,
-                      go_path = NULL,go_input = dfGOBP,minGeneSetSize = 5,maxGeneSetSize=300){
-#   NONSPECIFIC.TERMS <- list(mf=c("MOLECULAR_FUNCTION", "BINDING", "CATALYTIC ACTIVITY"),
-#                           cc=c("CELL", "CELL CORTEX PART", "CELL DIVISION SITE PART", "CELL FRACTION", "CELL PART", "CELL PERIPHERY", "CELL PROJECTION PART", "CELL WALL PART", "CELLULAR_COMPONENT", "CHROMOSOMAL PART", "CYTOPLASMIC PART", "CYTOPLASMIC VESICLE PART", "CYTOSKELETAL PART", "CYTOSOLIC PART", "ENDOPLASMIC RETICULUM PART", "ENDOSOMAL PART", "EXTERNAL ENCAPSULATING STRUCTURE", "EXTERNAL ENCAPSULATING STRUCTURE PART", "EXTRINSIC TO MEMBRANE", "GOLGI APPARATUS PART", "INSOLUBLE FRACTION", "INTEGRAL TO MEMBRANE", "INTEGRAL TO MEMBRANE OF MEMBRANE FRACTION", "INTRACELLULAR", "INTRACELLULAR ORGANELLE", "INTRACELLULAR ORGANELLE LUMEN", "INTRACELLULAR ORGANELLE PART", "INTRACELLULAR PART", "INTRACELLULAR MEMBRANE-BOUNDED ORGANELLE", "INTRACELLULAR NON-MEMBRANE-BOUNDED ORGANELLE", "INTRINSIC TO MEMBRANE", "MEMBRANE", "MEMBRANE-BOUNDED ORGANELLE", "MEMBRANE-ENCLOSED LUMEN", "MEMBRANE FRACTION", "MEMBRANE PART", "MICROBODY PART", "MICROTUBULE ORGANIZING CENTER PART", "MITOCHONDRIAL MEMBRANE PART", "MITOCHONDRIAL PART", "NON-MEMBRANE-BOUNDED ORGANELLE", "NUCLEAR CHROMOSOME PART", "NUCLEAR MEMBRANE PART", "NUCLEAR PART", "NUCLEOLAR PART", "NUCLEOPLASM PART", "ORGANELLE", "ORGANELLE INNER MEMBRANE", "ORGANELLE LUMEN", "ORGANELLE MEMBRANE", "ORGANELLE OUTER MEMBRANE", "ORGANELLE PART", "ORGANELLE SUBCOMPARTMENT", "PERIPHERAL TO MEMBRANE OF MEMBRANE FRACTION", "PEROXISOMAL PART", "PLASMA MEMBRANE ENRICHED FRACTION", "PLASMA MEMBRANE PART", "VACUOLAR PART", "VESICULAR FRACTION"),
-#                           bp=c("POSITIVE REGULATION OF MACROMOLECULE METABOLIC PROCESS", "REGULATION OF CELLULAR COMPONENT ORGANIZATION", "POSITIVE REGULATION OF METABOLIC PROCESS", "POSITIVE REGULATION OF CELLULAR METABOLIC PROCESS", "POSITIVE REGULATION OF CELLULAR PROCESS", "REGULATION OF CELLULAR PROCESS", "CELLULAR NITROGEN COMPOUND BIOSYNTHETIC PROCESS", "POSITIVE REGULATION OF NITROGEN COMPOUND METABOLIC PROCESS", "REGULATION OF CATALYTIC ACTIVITY", "POSITIVE REGULATION OF CATALYTIC ACTIVITY", "REGULATION OF MOLECULAR FUNCTION", "POSITIVE REGULATION OF CELLULAR COMPONENT ORGANIZATION", "REGULATION OF ORGANELLE ORGANIZATION", "POSITIVE REGULATION OF CATABOLIC PROCESS", "POSITIVE REGULATION OF CELLULAR CATABOLIC PROCESS", "POSITIVE REGULATION OF MOLECULAR FUNCTION", "REGULATION OF CATABOLIC PROCESS", "REGULATION OF CELLULAR CATABOLIC PROCESS", "CELLULAR RESPONSE TO CHEMICAL STIMULUS", "CELLULAR RESPONSE TO ORGANIC SUBSTANCE", "POSITIVE REGULATION OF BIOSYNTHETIC PROCESS", "POSITIVE REGULATION OF CELLULAR BIOSYNTHETIC PROCESS", "POSITIVE REGULATION OF MACROMOLECULE BIOSYNTHETIC PROCESS", "CELLULAR CARBOHYDRATE METABOLIC PROCESS", "REGULATION OF CELLULAR PROTEIN METABOLIC PROCESS", "REGULATION OF PROTEIN METABOLIC PROCESS", "NEGATIVE REGULATION OF BIOSYNTHETIC PROCESS", "NEGATIVE REGULATION OF CELLULAR BIOSYNTHETIC PROCESS", "NEGATIVE REGULATION OF CELLULAR MACROMOLECULE BIOSYNTHETIC PROCESS", "NEGATIVE REGULATION OF MACROMOLECULE METABOLIC PROCESS", "RESPONSE TO EXTERNAL STIMULUS", "RESPONSE TO EXTRACELLULAR STIMULUS", "CELLULAR HOMEOSTASIS", "HOMEOSTATIC PROCESS", "REGULATION OF HOMEOSTATIC PROCESS", "ORGANIC SUBSTANCE TRANSPORT", "CELLULAR NITROGEN COMPOUND CATABOLIC PROCESS", "ORGANIC ACID BIOSYNTHETIC PROCESS", "NEGATIVE REGULATION OF ORGANELLE ORGANIZATION", "ORGANELLE FISSION", "NEGATIVE REGULATION OF CELLULAR COMPONENT ORGANIZATION", "NEGATIVE REGULATION OF NITROGEN COMPOUND METABOLIC PROCESS", "CELLULAR DEVELOPMENTAL PROCESS", "MAINTENANCE OF LOCATION IN CELL","REGULATION OF DEVELOPMENTAL PROCESS","SMALL MOLECULE CATABOLIC PROCESS","ORGANIC ACID TRANSPORT","CARBOXYLIC ACID TRANSPORT", "CELLULAR RESPONSE TO EXTERNAL STIMULUS","NEGATIVE REGULATION OF RESPONSE TO STIMULUS","RESPONSE TO ENDOGENOUS STIMULUS","CELLULAR RESPONSE TO ENDOGENOUS STIMULUS","REGULATION OF LIGASE ACTIVITY", "CELLULAR COMPONENT MACROMOLECULE BIOSYNTHETIC PROCESS","REGULATION OF CELLULAR KETONE METABOLIC PROCESS", "POSITIVE REGULATION OF ORGANELLE ORGANIZATION", "RIBONUCLEOPROTEIN COMPLEX BIOGENESIS", "PROTEIN COMPLEX SUBUNIT ORGANIZATION", "PROTEIN COMPLEX BIOGENESIS", "PROTEIN COMPLEX ASSEMBLY", "CELLULAR PROTEIN COMPLEX ASSEMBLY", "RIBONUCLEOPROTEIN COMPLEX SUBUNIT ORGANIZATION", "RIBONUCLEOPROTEIN COMPLEX ASSEMBLY", "REGULATION OF PROTEIN COMPLEX ASSEMBLY", "PROTEIN COMPLEX DISASSEMBLY", "RIBONUCLEOPROTEIN COMPLEX LOCALIZATION", "RIBONUCLEOPROTEIN COMPLEX EXPORT FROM NUCLEUS", "CELLULAR PROTEIN COMPLEX DISASSEMBLY", "REGULATION OF PROTEIN COMPLEX DISASSEMBLY", "PROTEIN COMPLEX LOCALIZATION", "POSITIVE REGULATION OF PROTEIN COMPLEX ASSEMBLY", "CELLULAR PROTEIN COMPLEX LOCALIZATION", "NEGATIVE REGULATION OF PROTEIN COMPLEX DISASSEMBLY", "NEGATIVE REGULATION OF PROTEIN COMPLEX ASSEMBLY", "SMALL NUCLEOLAR RIBONUCLEOPROTEIN COMPLEX ASSEMBLY", "RIBONUCLEOPROTEIN COMPLEX DISASSEMBLY", "CHAPERONE-MEDIATED PROTEIN COMPLEX ASSEMBLY", "POSITIVE REGULATION OF PROTEIN COMPLEX DISASSEMBLY", "NEGATIVE REGULATION OF MACROMOLECULE BIOSYNTHETIC PROCESS", "CELLULAR COMPONENT MOVEMENT", "CELLULAR COMPONENT DISASSEMBLY", "REGULATION OF CELLULAR COMPONENT SIZE", "CELLULAR COMPONENT MAINTENANCE", "REGULATION OF CELLULAR COMPONENT BIOGENESIS", "CELLULAR COMPONENT DISASSEMBLY AT CELLULAR LEVEL", "CELLULAR COMPONENT MAINTENANCE AT CELLULAR LEVEL", "NEGATIVE REGULATION OF CELLULAR METABOLIC PROCESS", "RESPONSE TO ORGANIC SUBSTANCE", "CELLULAR CHEMICAL HOMEOSTASIS", "CHEMICAL HOMEOSTASIS", "REGULATION OF RESPONSE TO STIMULUS", "POSITIVE REGULATION OF RESPONSE TO STIMULUS"),
-#                           bp.lenient=c("POSITIVE REGULATION OF MACROMOLECULE METABOLIC PROCESS", "REGULATION OF CELLULAR COMPONENT ORGANIZATION", "POSITIVE REGULATION OF METABOLIC PROCESS", "POSITIVE REGULATION OF CELLULAR METABOLIC PROCESS", "POSITIVE REGULATION OF CELLULAR PROCESS", "REGULATION OF CELLULAR PROCESS", "REGULATION OF CATALYTIC ACTIVITY", "POSITIVE REGULATION OF CATALYTIC ACTIVITY", "REGULATION OF MOLECULAR FUNCTION", "POSITIVE REGULATION OF CELLULAR COMPONENT ORGANIZATION", "REGULATION OF ORGANELLE ORGANIZATION", "POSITIVE REGULATION OF CATABOLIC PROCESS", "POSITIVE REGULATION OF CELLULAR CATABOLIC PROCESS", "POSITIVE REGULATION OF MOLECULAR FUNCTION", "REGULATION OF CATABOLIC PROCESS", "REGULATION OF CELLULAR CATABOLIC PROCESS", "CELLULAR RESPONSE TO CHEMICAL STIMULUS", "CELLULAR RESPONSE TO ORGANIC SUBSTANCE", "POSITIVE REGULATION OF BIOSYNTHETIC PROCESS", "POSITIVE REGULATION OF CELLULAR BIOSYNTHETIC PROCESS", "POSITIVE REGULATION OF MACROMOLECULE BIOSYNTHETIC PROCESS", "NEGATIVE REGULATION OF BIOSYNTHETIC PROCESS", "NEGATIVE REGULATION OF CELLULAR BIOSYNTHETIC PROCESS", "NEGATIVE REGULATION OF CELLULAR MACROMOLECULE BIOSYNTHETIC PROCESS", "NEGATIVE REGULATION OF MACROMOLECULE METABOLIC PROCESS", "RESPONSE TO EXTERNAL STIMULUS", "RESPONSE TO EXTRACELLULAR STIMULUS", "CELLULAR HOMEOSTASIS", "HOMEOSTATIC PROCESS", "REGULATION OF HOMEOSTATIC PROCESS", "ORGANIC SUBSTANCE TRANSPORT", "ORGANIC ACID BIOSYNTHETIC PROCESS", "NEGATIVE REGULATION OF ORGANELLE ORGANIZATION", "ORGANELLE FISSION", "NEGATIVE REGULATION OF CELLULAR COMPONENT ORGANIZATION", "CELLULAR DEVELOPMENTAL PROCESS", "MAINTENANCE OF LOCATION IN CELL","REGULATION OF DEVELOPMENTAL PROCESS","SMALL MOLECULE CATABOLIC PROCESS","ORGANIC ACID TRANSPORT", "CELLULAR RESPONSE TO EXTERNAL STIMULUS","NEGATIVE REGULATION OF RESPONSE TO STIMULUS","RESPONSE TO ENDOGENOUS STIMULUS","CELLULAR RESPONSE TO ENDOGENOUS STIMULUS","REGULATION OF LIGASE ACTIVITY", "CELLULAR COMPONENT MACROMOLECULE BIOSYNTHETIC PROCESS", "POSITIVE REGULATION OF ORGANELLE ORGANIZATION", "NEGATIVE REGULATION OF MACROMOLECULE BIOSYNTHETIC PROCESS", "CELLULAR COMPONENT MOVEMENT", "CELLULAR COMPONENT DISASSEMBLY", "REGULATION OF CELLULAR COMPONENT SIZE", "CELLULAR COMPONENT MAINTENANCE", "REGULATION OF CELLULAR COMPONENT BIOGENESIS", "CELLULAR COMPONENT DISASSEMBLY AT CELLULAR LEVEL", "CELLULAR COMPONENT MAINTENANCE AT CELLULAR LEVEL", "NEGATIVE REGULATION OF CELLULAR METABOLIC PROCESS", "RESPONSE TO ORGANIC SUBSTANCE", "CELLULAR CHEMICAL HOMEOSTASIS", "CHEMICAL HOMEOSTASIS", "REGULATION OF RESPONSE TO STIMULUS", "POSITIVE REGULATION OF RESPONSE TO STIMULUS"),
-#                           complexes=c("GOLGI APPARATUS","CELL CORTEX","CELL WALL","CELLULAR BUD","CHROMOSOME","CYTOPLASM","CYTOPLASMIC MEMBRANE-BOUNDED VESICLE","CYTOSKELETON","ENDOMEMBRANE SYSTEM","ENDOPLASMIC RETICULUM","MEMBRANE FRACTION","MEMBRANE","MICROTUBULE ORGANIZING CENTER","MITOCHONDRIAL ENVELOPE","MITOCHONDRION","HETEROGENEOUS NUCLEAR RIBONUCLEOPROTEIN COMPLEX","NUCLEOLUS","NUCLEUS","PEROXISOME","PLASMA MEMBRANE","SITE OF POLARIZED GROWTH","VACUOLE","POLAR MICROTUBULE","SMALL NUCLEAR RIBONUCLEOPROTEIN COMPLEX","SMALL NUCLEOLAR RIBONUCLEOPROTEIN COMPLEX","TRANSCRIPTION FACTOR COMPLEX","CDC73-PAF1 COMPLEX","SIGNAL RECOGNITION PARTICLE", "ARP2-3 PROTEIN COMPLEX", "CCR4-NOT NOT2-NOT5 SUBCOMPLEX", "CDC48-UFD1-NPL4 COMPLEX", "EKC-KEOPS PROTEIN COMPLEX", "HDA COMPLEX", "HRD1 UBIQUITIN LIGASE ERAD-L COMPLEX", "MRNA CAPPING ENZYME COMPLEX", "NRD1-NAB3-SEN1 TERMINATION COMPLEX", "RIC1-RGP1 COMPLEX", "SNRNP U2", "SNRNP U6", "RNA POLYMERASE III COMPLEX"))
-# ##############
-library(gplots)
-##############
-mycolors = c(
-  "darkorange1",
-  "dodgerblue",
-  "darkgreen",
-  "navy",
-  "mediumpurple"  ,
-  "royalblue3",
-  "darkolivegreen4",
-  "firebrick",
-  "cyan4",
-  "hotpink3",
-  "plum4",
-  "blue",
-  "magenta4",
-  "skyblue3",
-  "green4",
-  "red3",
-  "steelblue3",
-  "tomato",
-  "purple4",
-  "goldenrod3",
-  "steelblue",
-  "darkred",
-  "lightpink3",
-  "darkorchid",
-  "lightblue3",
-  "dimgrey",
-  "chocolate1",
-  "seagreen3",
-  "darkkhaki",
-  "darksalmon"
-)
+runGORESP = function (mat,coln,curr_exp = colnames(mat)[coln], sig = 1, fdrThresh = 0.2, bp_path = NULL,bp_input = NULL,
+                      go_path = NULL,go_input = NULL,minGeneSetSize = 5,maxGeneSetSize=300){
+
+
 ##############
 CLUST.COL <- c("#FF00CC","#33CCFF", "#33CC00", "#9900FF", "#FF9900", "#FFFF00", "#FFCCFF", "#FF0000", "#006600", "#009999", "#CCCC00", "#993300", "#CC99CC", "#6699CC","#CCCCFF", "#FFCC99", "#9966FF", "#CC6600", "#CCFFFF", "#99CC00", "#FF99FF", "#0066FF", "#66FFCC", "#99CCFF", "#9999CC", "#CC9900", "#CC33FF", "#006699", "#F5DF16", "#B5185E", "#99FF00", "#00FFFF", "#990000", "#CC0000", "#33CCCC", "#CC6666", "#996600", "#9999FF", "#3366FF")
-rc=col2hex(mycolors)
+
 prunedCol <- "#BEBEBE"
-CLUST.COL = c(CLUST.COL,rc)
+
 
 
 
@@ -117,137 +79,6 @@ getUniquePairs = function (maxVal)
 
 ##############
 
-# generates a dataframe of gene sets that are *not* significantly enriched, yet they contain query genes,
-# i.e. genes in chemical-genetic interactions
-# queryGeneSets - named list of queryGeneSets, where each list element is a vector of query genes
-#           - the names are filenames (typically) identifying different experiments
-# enrichMat - dataframe with enrichment stats for gene sets (one per row), with the following columns:
-#             filename, term, geneSetFraction, FDR, overlapGenes, maxOverlapGeneScore
-#           - see documentation for the output of hyperG() for descriptions of these columns
-#           - rows with the same value, x, in the filename column specify enrichment results for
-#             the set of query genes in queryGeneSets with name=x
-# scoreMat - score matrix/dataframe; row names are gene IDs and column names are filenames
-#          - each column contains a different set of scores
-# termsToExclude - vector of terms (i.e. names of gene sets) to exclude from the results; can be NULL
-# fdrThresh - FDR threshold; only show gene sets that do not pass this significance threshold
-# RETURNS a dataframe of gene sets that are not significantly enriched (one per row),
-#         sorted by decreasing maxOverlapGeneScore value. The dataframe includes these columns:
-#         filename = filename identifying the query gene set
-#         term = gene set name
-#         geneSetFraction = the fraction of the term set that overlaps with the query set
-#         overlapGenes = a |-separated list of genes in the overlap of the query set and the term set;
-#             the scores of the genes are shown in parentheses
-#	  maxOverlapGeneScore = the maximum score of the overlapGenes
-#         unenrichedGenes = a |-separated list of genes in the overlap of the query set and the term set
-#             that *also* do not belong to any significantly enriched term set;
-#
-# genesNotInEnrichedTerm = function (queryGeneSets, enrichMat, scoreMat, termsToExclude ,
-#   fdrThresh = 0.1)
-# {
-#   scoreMat <- as.matrix(scoreMat)
-#   enrichMat <- enrichMat[!(enrichMat$term %in% termsToExclude),
-#     , drop = F]
-#   lens <- sapply(queryGeneSets, length)
-#   queryGeneSets <- queryGeneSets[lens > 0]
-#   oGenes <- strsplit(enrichMat$overlapGenes, "\\|")
-#   oGenes <- lapply(oGenes, function(genes) {
-#     genes <- strsplit(genes, "\\(")
-#     sapply(genes, function(vec) {
-#       vec[1]
-#     })
-#   })
-#   rowI <- split(1:nrow(enrichMat), enrichMat$filename)
-#   enrichI <- match(names(queryGeneSets), names(rowI))
-#   extraGenes <- queryGeneSets[is.na(enrichI)]
-#   queryGeneSets <- queryGeneSets[!is.na(enrichI)]
-#   rowI <- rowI[enrichI[!is.na(enrichI)]]
-#   tmp <- lapply(1:length(queryGeneSets), function(expI) {
-#     setdiff(queryGeneSets[[expI]], unlist(oGenes[rowI[[expI]]]))
-#   })
-#   names(tmp) <- names(queryGeneSets)
-#   extraGenes <- c(extraGenes, tmp)
-#   lens <- sapply(extraGenes, length)
-#   extraGenes <- extraGenes[lens > 0]
-#   if (length(extraGenes) > 0) {
-#     lens <- lens[lens > 0]
-#     extraGenes <- data.frame(filename = rep(names(extraGenes),
-#       lens), gene = unlist(extraGenes), stringsAsFactors = F)
-#     i <- match(extraGenes$gene, rownames(scoreMat))
-#     i <- cbind(i, match(extraGenes$filename, colnames(scoreMat)))
-#     extraGenes$score <- round(scoreMat[i], 2)
-#     extraGenes <- extraGenes[order(extraGenes$score, decreasing = T),
-#       ]
-#     i <- split(1:nrow(extraGenes), extraGenes$filename)
-#     extraGenes <- lapply(i, function(curRow) {
-#       tmp <- paste(extraGenes$gene[curRow], "(", extraGenes$score[curRow],
-#         ")", sep = "")
-#       c(extraGenes$score[curRow[1]], paste(tmp, collapse = "|"))
-#     })
-#   }
-#   tmp <- lapply(1:length(queryGeneSets), function(expI) {
-#     curRow <- rowI[[expI]]
-#     sigI <- curRow[enrichMat$FDR[curRow] <= fdrThresh]
-#     unenrichedGenes <- setdiff(queryGeneSets[[expI]], unlist(oGenes[sigI]))
-#     curRow <- setdiff(curRow, sigI)
-#     if (length(curRow) == 0) {
-#       return(list(rowI = NULL, unenrichedGenes = NULL))
-#     }
-#     unenrichedGenes <- lapply(oGenes[curRow], function(genes) {
-#       intersect(unenrichedGenes, genes)
-#     })
-#     lens <- sapply(unenrichedGenes, length)
-#     unenrichedGenes <- unenrichedGenes[lens > 0]
-#     curRow <- curRow[lens > 0]
-#     if (length(curRow) == 0) {
-#       return(list(rowI = NULL, unenrichedGenes = NULL))
-#     }
-#     expI <- match(enrichMat$filename[curRow[1]], colnames(scoreMat))
-#     unenrichedGenes <- lapply(unenrichedGenes, function(curGenes) {
-#       geneI <- match(curGenes, rownames(scoreMat))
-#       geneStr <- scoreMat[geneI, expI]
-#       names(geneStr) <- curGenes
-#       geneStr <- round(sort(geneStr, decreasing = T), 2)
-#       geneStr <- paste(names(geneStr), "(", geneStr, ")",
-#         sep = "")
-#       paste(geneStr, collapse = "|")
-#     })
-#     list(rowI = curRow, unenrichedGenes = unenrichedGenes)
-#   })
-#   unenrichedMat <- enrichMat[unlist(lapply(tmp, function(ob) {
-#     ob$rowI
-#   })), ]
-#   unenrichedMat$unenrichedGenes <- unlist(lapply(tmp, function(ob) {
-#     ob$unenrichedGenes
-#   }))
-#   if (length(extraGenes) > 0) {
-#     unenrichedMat <- unenrichedMat[c(rep(1, length(extraGenes)),
-#       1:nrow(unenrichedMat)), ]
-#     toDoI <- 1:length(extraGenes)
-#     unenrichedMat$filename[toDoI] <- names(extraGenes)
-#     unenrichedMat$term[toDoI] <- "OTHER"
-#     unenrichedMat$overlapGenes[toDoI] <- sapply(extraGenes,
-#       function(vec) {
-#         vec[2]
-#       })
-#     unenrichedMat$maxOverlapGeneScore[toDoI] <- as.numeric(sapply(extraGenes,
-#       function(vec) {
-#         vec[1]
-#       }))
-#     unenrichedMat$unenrichedGenes[toDoI] <- unenrichedMat$overlapGenes[toDoI]
-#     if (!is.null(unenrichedMat$pruneOutcome)) {
-#       unenrichedMat$pruneOutcome[toDoI] <- "OTHER"
-#     }
-#     naCol <- setdiff(colnames(unenrichedMat), c("filename",
-#       "term", "overlapGenes", "maxOverlapGeneScore", "unenrichedGenes"))
-#     colI <- match(naCol, colnames(unenrichedMat))
-#     unenrichedMat[toDoI, colI] <- NA
-#   }
-#   rownames(unenrichedMat) <- NULL
-#   unenrichedMat <- unenrichedMat[order(unenrichedMat$geneSetFraction,
-#     decreasing = T), ]
-#   unenrichedMat[order(unenrichedMat$maxOverlapGeneScore, decreasing = T),
-#     ]
-# }
 
 # computes enrichment using the hypergeometric test, and uses the resulting P values with
 # the Benjamini Hochberg method to estimate FDR values
@@ -323,7 +154,7 @@ hyperG = function (querySet, geneSets, uni, scoreMat, minSetSize = minGeneSetSiz
 #
 
 
-#######hiphop:::overlapCoeff
+
 #######the overlap of genesets for all combinations
 #######If set X is a subset of Y or the converse then the overlap coefficient is equal to 1.
 
@@ -344,20 +175,13 @@ overlapCoeff = function (gsPairList)
 #            - see documentation for the output of hyperG() for descriptions of these columns
 # geneSets - named list of gene sets tested for significant overlap w/ the query set,
 #              restricted to genes in the universe
-# outFile - the output xgmml file will be saved to this location
+#
 # fdrThresh - FDR threshold; only show gene sets that pass this significance threshold
 # overlapThresh - an edge between a pair of enriched gene sets will only be shown if the overlap coefficient
 #              is >= overlapThresh
-# nonEnrichInfo - dataframe with info on gene sets that are *not* significantly enriched (one per row)
-#             with the following columns:
-#             term, overlapGenes, maxOverlapGeneScore, geneSetFraction, unenrichedGenes
-#            - see documentation for the output of genesNotInEnrichedTerm() for descriptions of these columns
-#            - can be NULL
-# barModGenes - if provided (i.e. not NULL) a vector of genes that should be marked distinctly in the
-#              barplots, should they be in the top overlap genes
-# scoreName - score label to use in top overlap gene barplots
-# plotForEachEnrichedTerm - if TRUE, a top overlap gene barplot will be created for each enriched term;
-#              if FALSE, a barplot will be created for each enriched term cluster
+
+
+
 # goTable - a dataframe with the following columns describing GO terms:
 #         - "term" (GO term), "id" (GOID)
 #         - if provided (i.e. not NULL), the GO ID numbers of the enriched GO terms will be saved in
@@ -366,9 +190,8 @@ overlapCoeff = function (gsPairList)
 
 ###############
 #### query set is genes with significant fitness defect, uni is all the genes in the data matrix, the union
-clusterEnrich = function (enrichInfo, geneSets, outFile, fdrThresh = 0.1, overlapThresh = 0.5,
-                            nonEnrichInfo = NULL, barModGenes = NULL, scoreName = "Fitness defect score",
-                            plotForEachEnrichedTerm = F, go_path = go_path, go_input = go_input){
+clusterEnrich = function (enrichInfo, geneSets, fdrThresh = 0.1, overlapThresh = 0.5,
+                            go_path = go_path, go_input = go_input){
 
 
   go_file = file.path(go_path)
@@ -382,40 +205,7 @@ clusterEnrich = function (enrichInfo, geneSets, outFile, fdrThresh = 0.1, overla
   edgeWidthRange <- c(1, 5)
   overlapCoeffRange <- c(overlapThresh, 1)
 
-  if (!is.null(nonEnrichInfo)) {
-    nonEnrichInfo$maxOverlapGeneScore <- round(nonEnrichInfo$maxOverlapGeneScore,
-                                               2)
-    nonEnrichInfo$geneSetFraction <- round(nonEnrichInfo$geneSetFraction *100, 1)
-    if (is.null(nonEnrichInfo$nGenes)) {
-      lens <- sapply(geneSets, length)
-      i <- match(nonEnrichInfo$term, names(lens))
-      nonEnrichInfo$nGenes <- lens[i]
-    }
-    tmp <- strsplit(nonEnrichInfo$overlapGenes, "\\|")
-    w <- which(is.na(tmp))
-    if(length(w)>0) tmp = tmp[-w]
-    if (is.null(nonEnrichInfo$unenrichedGenes)) {
-      nonEnrichInfo$overlapGenes <- sapply(tmp, paste,
-                                           collapse = "| ")
-    }
-    else {
-      unEnriched <- strsplit(nonEnrichInfo$unenrichedGenes,
-                             "\\|")
-      tmp.mod <- sapply(1:length(tmp), function(termI) {
-        vec <- tmp[[termI]]
-        i <- match(unEnriched[[termI]], tmp[[termI]])
-        vec[i] <- paste("<b>", vec[i], "</b>", sep = "")
-        paste(vec, collapse = "| ")
-      })
 
-      nonEnrichInfo$overlapGenes <- tmp.mod
-    }
-
-    if (is.null(enrichInfo)) {
-
-      return()
-    }
-  }
 
   enrichInfo <- enrichInfo[enrichInfo$FDR <= fdrThresh, , drop = F]
 
@@ -557,7 +347,7 @@ compSCORE <- function(mat,coln, sig = 1){
   wdf = which(df$score >= sig)
   df$index[wdf]=1
   df = df[,c('index','score','gene')]
-  df = dplyr::arrange(df,desc(score))
+  df = dplyr::arrange(df,dplyr::desc(score))
   df
 }
 
@@ -606,18 +396,17 @@ compSCORE <- function(mat,coln, sig = 1){
 
   q = clusterEnrich(enrichInfo = enrichMat.mn, geneSets = bp,
                       fdrThresh = fdrThresh, overlapThresh = 0.5,
-                      nonEnrichInfo = NULL, barModGenes = NULL,
-                      scoreName = "score", plotForEachEnrichedTerm = F,go_path = go_path,go_input = go_input)
+                      go_path = go_path,go_input = go_input)
 
   edgeMat = q$edgeMat
   enrichInfo = q$enrichInfo
   m = match(enrichInfo$term,go_input$term)
       table(is.na(m))
       enrichInfo$GOID = go_input$GOID[m]
-  library(dplyr)
+
   if(!is.null(enrichInfo)) {
 
-    enrichInfo = enrichInfo %>% arrange(FDR)
+    enrichInfo = enrichInfo %>% dplyr::arrange(FDR)
     enrichInfo$nOverlap = round(enrichInfo$geneSetFraction*enrichInfo$nGenes/100)
     enrichInfo$nQuery = round((enrichInfo$geneSetFraction*enrichInfo$nGenes/100)/(enrichInfo$querySetFraction/100))
 
@@ -705,7 +494,10 @@ compSCORE <- function(mat,coln, sig = 1){
 #' @param uni character vector of genes in the universe (i.e. background set)
 #'     - if NULL, must specify uniSize
 #' @param uniSize the number of genes in the universe
-#' @param maxSetSize max number of genes in geneSets (after restricting to the gene universe)
+#' @param maxSetSize upper limit on the number of genes in a geneset included in the analysis
+#' (after restricting to the gene universe)
+#' @param minSetSize lower limit on the number of genes in a geneset included in the analysis
+#' (after restricting to the gene universe)
 #'
 #' @return dataframe of enrichment results, sorted by increasing FDR value. The columns are:
 #          term = name of gene set
@@ -718,8 +510,8 @@ compSCORE <- function(mat,coln, sig = 1){
 #'                        if scoreMat is provided (not NULL), the scores of the genes are shown in parentheses
 #'	       maxOverlapGeneScore = if scoreMat is provided (not NULL), the maximum score of the overlapGenes
 #' @export
-hyperG = function (querySet, geneSets, uni, scoreMat, minSetSize = minGeneSetSize,
-  maxSetSize = maxGeneSetSize, uniSize = NA)
+hyperG = function (querySet, geneSets, uni, scoreMat, minSetSize = 5,
+  maxSetSize = 300, uniSize = NA)
 {
   if (!is.null(uni)) {
     geneSets <- lapply(geneSets, intersect, uni)
@@ -780,14 +572,14 @@ hyperG = function (querySet, geneSets, uni, scoreMat, minSetSize = minGeneSetSiz
 
 compSCORE <- function(mat,coln, sig = 1){
    df = data.frame(score = mat[,coln],stringsAsFactors = F)
-   suppressPackageStartupMessages({library(dplyr)})
+
    df$gene = rownames(mat)
    rownames(df) = df$gene
    df$index=0
    wdf = which(df$score >= sig)
    df$index[wdf]=1
    df = df[,c('index','score','gene')]
-   df = df %>% dplyr::arrange(desc(score))
+   df = df %>% dplyr::arrange(dplyr::desc(score))
    df
    }
 ############
@@ -843,7 +635,7 @@ visSetup = function(enrichInfo, edgeMat, fontsize = 22, fontface = "Arial") {
 
   w = which(duplicated(vis$nodes$FDR))
   if (length(w) > 0) {
-    vis$nodes =  group_by(vis$nodes,FDR)
+    vis$nodes =  dplyr::group_by(vis$nodes,FDR)
     vis$nodes = dplyr::mutate(vis$nodes, jitter = if (n() > 1) abs(jitter(FDR)) else FDR)
     w = which(names(vis$nodes) == "FDR")
     vis$nodes = vis$nodes[, -w]
@@ -904,6 +696,7 @@ visSetup = function(enrichInfo, edgeMat, fontsize = 22, fontface = "Arial") {
 #' to genesets comprised at least 5 (minGeneSetSize) and not more than 300 genes (maxGeneSetSize).
 #' @param nodes dataframe returned from visSetup, "nodes" see ?? visSetup
 #' @param edges dataframe returned from visSetup, "edges" see ?? visSetup
+#' @param height A numeric value
 #' @return network
 #' The significance of the enrichments was estimated using the hypergeometric test
 #' for the set of genes passing the fitness score threshold.connected by edges.
@@ -913,21 +706,28 @@ visSetup = function(enrichInfo, edgeMat, fontsize = 22, fontface = "Arial") {
 #' Of these GO sets, we highlight the most significantly enriched, and the rest are
 #' considered redundant.
 #' @export
-runNetwork <- function(nodes,edges){
+runNetwork <- function(nodes,edges, height = 1300, main = list(text = nodes$filename[1],
+style = "font-size:40px;text-align:center;"),...){
+n = nodes
 
-  visNetwork::visNetwork(nodes,edges, width = "100%") %>%
-    visNetwork::visNodes(shadow=list(enabled = T,size = 25)) %>%
-    visNetwork::visOptions(
-      highlightNearest = list(enabled = T, degree = 5, hover = T),
-      nodesIdSelection = list(enabled = TRUE, values = names,
-                              style = 'width: 250px;color: #000066;'),
-      selectedBy = list(variable="FDR",
-                        style = 'width: 250px;color: #000066;')) %>%
+n <- n%>% dplyr::arrange(term)
+names=n$id
 
-    visNetwork::visIgraphLayout(type = "full")
+visNetwork(nodes, edges, width = "100%",height = height, main = main,...) %>%
+visNodes(shadow=list(enabled=T,size=25)) %>%
 
-
+visOptions(
+highlightNearest = list(enabled = T, degree = 5, hover = T),
+nodesIdSelection = list(enabled = TRUE, values = names,
+style = 'width: 500px; height = 31px; font-size: 18px; color: #000066;border: 3px solid #4d88ff;'),
+selectedBy = list(variable="FDR",
+style = 'width: 200px; height = 31px; font-size: 18px; color: #000066;border: 3px solid #4d88ff;')) %>%
+visIgraphLayout(type = "full")  %>%
+visEvents(select = "function(nodes) {
+Shiny.onInputChange('current_node_id', nodes.nodes);
+;}")
 }
+
 
 
 

@@ -1,18 +1,17 @@
 Package: omic.data
 Type: Package
 Title: GO enrichment visualization tool
-Version: 0.4.0
+Version: 0.5.0
 Author: Guri Giaever
 Maintainer: Guri Giaever <g.gaiever@ubc.ca>
 Description: A network visualization tool for GO enrichments.
 biocViews: Fitness, Drug targets, GeneSetEnrichment,
         Pathways
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+License:  GPL-3
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 3.0.0), stats, methods, utils, dplyr, igraph, visNetwork
-Imports: methods, utils, stats, graphics, grDevices, base, magrittr
+Depends: R (>= 3.5),utils, stats, magrittr, dplyr, igraph
+Imports: visNetwork
 RoxygenNote: 7.2.0
 URL: https://github.com/gurinina/omic.data
 BugReports: https://github.com/gurinina/omic.data/issues
