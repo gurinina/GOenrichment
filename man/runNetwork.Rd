@@ -2,29 +2,33 @@
 % Please edit documentation in R/2022_March13_GORESP.R
 \name{runNetwork}
 \alias{runNetwork}
-\title{runNetwork: takes the output from visSetup generating a network of nodes comprised of
-geheSets defined by Gene Ontology (GO) biological processes. Analysis is restricted
-to genesets comprised at least 5 (minGeneSetSize) and not more than 300 genes (maxGeneSetSize).}
+\title{runNetwork}
 \usage{
-runNetwork(nodes, edges)
+runNetwork(
+  nodes,
+  edges,
+  height = 1300,
+  main = list(text = nodes$filename[1], style = "font-size:40px;text-align:center;")
+)
 }
 \arguments{
 \item{nodes}{dataframe returned from visSetup, "nodes" see ?? visSetup}
 
 \item{edges}{dataframe returned from visSetup, "edges" see ?? visSetup}
+
+\item{height}{A numeric value}
+
+\item{main}{character title list, includes font size and color if desired}
 }
 \value{
 network
-The significance of the enrichments was estimated using the hypergeometric test
-for the set of genes passing the fitness score threshold.connected by edges.
-The enrichment of a GO gene set is driven by the gene subset also present in the
-query set derived from the genes passing the fitness score threshold. In some cases,
-a similar set of query set genes drives the enrichment of multiple GO gene sets.
-Of these GO sets, we highlight the most significantly enriched, and the rest are
-considered redundant.
 }
 \description{
-runNetwork: takes the output from visSetup generating a network of nodes comprised of
-geheSets defined by Gene Ontology (GO) biological processes. Analysis is restricted
-to genesets comprised at least 5 (minGeneSetSize) and not more than 300 genes (maxGeneSetSize).
+Uses the output from visSetup to generate a network of gene enrrichments.
+}
+\details{
+The larger a node in the netwark, the more significance the
+GO enrichment for that term. The thicker the edge connecting twa nodes,
+the greater the overlap betweem twp terms. Bold and enlarged font size
+indicate the most enriched term for a given cluster.
 }

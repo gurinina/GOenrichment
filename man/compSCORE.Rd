@@ -2,23 +2,22 @@
 % Please edit documentation in R/2022_March13_GORESP.R
 \name{compSCORE}
 \alias{compSCORE}
-\title{computes a dataframe of significant fitness scores from a matrix of significance scores
-defined by a fitness score cutoff}
+\title{compSCORE:}
 \usage{
 compSCORE(mat, coln, sig = 1)
 }
 \arguments{
-\item{mat}{matrix of fitness scores}
+\item{mat}{numeric matrix of fitness scores}
 
-\item{coln}{column # of matrix with the sample of interest}
+\item{coln}{numeric, column # of matrix with the sample of interest}
 
-\item{sig}{= significance threshold, default = 1}
+\item{sig}{numeric, significance threshold, default = 1}
 }
 \value{
-dataframe with 3 columns: gene, index, score. index indicating significant if 1,
-nonsignificant if 0
+dataframe with 3 columns: gene, index, score. index indicating significant 1,
+or nonsignificant, 0
 }
 \description{
-computes a dataframe of significant fitness scores from a matrix of significance scores
-defined by a fitness score cutoff
+computes a dataframe of designating significant fitness scores from a
+matrix of screening data
 }

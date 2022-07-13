@@ -10,7 +10,7 @@ biocViews: Fitness, Drug targets, GeneSetEnrichment,
 License:  GPL-3
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 3.5),utils, stats, magrittr, dplyr, igraph
+Depends: R (>= 3.5),utils, stats, dplyr, igraph
 Imports: visNetwork
 RoxygenNote: 7.2.0
 URL: https://github.com/gurinina/omic.data

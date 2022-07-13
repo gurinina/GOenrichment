@@ -2,7 +2,7 @@
 % Please edit documentation in R/2022_March13_GORESP.R
 \name{visSetup}
 \alias{visSetup}
-\title{visSetup: this function takes the output from runGORESP generates objects for drawing GO enrichment networks}
+\title{visSetup}
 \usage{
 visSetup(enrichInfo, edgeMat, fontsize = 22, fontface = "Arial")
 }
@@ -26,5 +26,5 @@ borderWidth, labelHighlightBold and and vis$edges with the columns from, to, ove
 width and color
 }
 \description{
-visSetup: this function takes the output from runGORESP generates objects for drawing GO enrichment networks
+this function takes the output from runGORESP generates objects for drawing GO enrichment networks
 }
