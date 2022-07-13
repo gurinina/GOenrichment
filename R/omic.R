@@ -43,6 +43,10 @@ NULL
 #'      \item{chr [1:4956]}{"AAC1" "AAC3" "AAD14" "AAD3" ...}
 #'      \item{chr [1:2]}{"azithromycin_1.75mM" "azithromycin_2mM"}
 #'}
+#' @name sampleFITdata
+#' @format numeric matrix with two columns; 4956 gene names in rows
+#'
+#'
 #'@source \url{https://www.ggcnlab.com/}
 NULL
 

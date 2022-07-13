@@ -5,7 +5,11 @@ export(hyperG)
 export(runNetwork)
 export(visSetup)
 importFrom(dplyr,"%>%")
+<<<<<<< HEAD
 importFrom("stats", "p.adjust", "phyper")
 importFrom("igraph", "V", "set_vertex_attr","graph_from_data_frame","make_empty_graph")
 import("visNetwork")
 importFrom("dplyr", "arrange", "group_by","mutate","desc")
+=======
+importFrom(magrittr,"%>%")
+>>>>>>> e3df6ff77d1d96c2a2944bb6d9104fa2f8d15259
