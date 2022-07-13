@@ -8,7 +8,16 @@ runNetwork(
   nodes,
   edges,
   height = 1300,
+<<<<<<< HEAD
   main = list(text = nodes$filename[1], style = "font-size:40px;text-align:center;")
+=======
+<<<<<<< HEAD
+  main = list(text = nodes$filename[1], style = "font-size:40px;text-align:center;")
+=======
+  main = list(text = nodes$filename[1], style = "font-size:40px;text-align:center;"),
+  ...
+>>>>>>> e3df6ff77d1d96c2a2944bb6d9104fa2f8d15259
+>>>>>>> fecbf8780150295844477dc4753b3f7b7aa8037c
 )
 }
 \arguments{
@@ -17,8 +26,16 @@ runNetwork(
 \item{edges}{dataframe returned from visSetup, "edges" see ?? visSetup}
 
 \item{height}{A numeric value}
+<<<<<<< HEAD
 
 \item{main}{character title list, includes font size and color if desired}
+=======
+<<<<<<< HEAD
+
+\item{main}{character title list, includes font size and color if desired}
+=======
+>>>>>>> e3df6ff77d1d96c2a2944bb6d9104fa2f8d15259
+>>>>>>> fecbf8780150295844477dc4753b3f7b7aa8037c
 }
 \value{
 network
