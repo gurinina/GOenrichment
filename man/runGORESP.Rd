@@ -2,17 +2,7 @@
 % Please edit documentation in R/2022_March13_GORESP.R
 \name{runGORESP}
 \alias{runGORESP}
-\title{@param mat matrix of fitness data
-    @param coln the column of the matrix with sample of interest
-    @param curr_exp name of exp, usually after the sample name so set to colnames(mat)[coln]
-    @param sig significance threshold of fitness defect score, default is 1
-    @param fdrThresh fdr threshold for significance cutoff of enrichments, default = 0.2
-    @param bp_path path of gmt file
-    @param bp_input alternatively th gmt file itself
-    @param go_path path of file with GOID and terms path of gmt file alternatively bp_input, gmt file itself,
-    @param go_input alternatively the file with GOID and terms itself
-    @param minGeneSetSize lower limit on geneSetSize, default 5
-    @param maxGeneSetSize upper limit on geneSetSize,,default 300}
+\title{runGORESP}
 \usage{
 runGORESP(
   mat,
@@ -21,21 +11,47 @@ runGORESP(
   sig = 1,
   fdrThresh = 0.2,
   bp_path = NULL,
-  bp_input = GOBPgmt,
+  bp_input = NULL,
   go_path = NULL,
-  go_input = dfGOBP,
+  go_input = NULL,
   minGeneSetSize = 5,
   maxGeneSetSize = 300
 )
 }
-\description{
-RETURNS two dataframes of enrichment results, sorted by increasing FDR value.
-}
-\details{
-@return enrichInfo dataframe includes the columns: filename,term, nGenes, nQuery, nOverlap,
-    querySetFraction, geneSetFraction, foldEnrichment, P, FDR, overlapGenes, maxOverlapGeneScore and columns used for visuealization purposes such as
-    cluster, id, size and formattedLabel
+\arguments{
+\item{mat}{numeric matrix of fitness data}
 
+\item{coln}{mumeric. the column of the matrix with sample of interest}
+
+\item{curr_exp}{character, name of exp, usually after the sample name so set to colnames(mat)[coln]}
+
+\item{sig}{mumeric, significance threshold of fitness defect score, default is 1}
+
+\item{fdrThresh}{numeric, fdr threshold for significance cutoff of enrichments, default = 0.2}
+
+\item{bp_path}{character, path of gmt file}
+
+\item{bp_input}{gmt file or NULL, **Note: bp_path and bp_input can't both be NULL}
+
+\item{go_path}{character, path of file with GOID and terms path of gmt file alternatively bp_input, gmt file itself,}
+
+\item{go_input}{dataframe with GOID and terms matching bp_input  **Note: go_path and go_input can both be NULL}
+
+\item{minGeneSetSize}{numeric, lower limit on the number of genes in a geneset included in the analysis, default = 5}
+
+\item{maxGeneSetSize}{numeric, upper limit on the number of genes in a geneset included in the analysis,default = 300}
+}
+\value{
+RETURNS two dataframes: enrichInfo with enrichment results and edgeMat with information about
+geneset term overlap and clusters.
+dataframe includes the columns: filename,term, nGenes, nQuery, nOverlap,
+v@details columns enrichInfo:
+    filename
+    GOID: GO ID
+    term: GO term
+    nGenes: # genes in the geneset
+    nQuery: # genes in the query
+    nOverlap: # genes overlapping the query and the geneset
     querySetFraction: the fraction of the query set (the set that passes the significance threshold)
      that overlaps with the term set
     geneSetFraction: the fraction of the term set that overlaps with the query set
@@ -46,8 +62,23 @@ RETURNS two dataframes of enrichment results, sorted by increasing FDR value.
     overlapGenes = a |-separated list of genes that overlap the query set and the geneSet
                        if scoreMat is provided (not NULL), the scores of the genes are shown in parentheses
    maxOverlapGeneScore = if scoreMat is provided (not NULL), the maximum score of the overlapGenes
-    @return edgeMat dataframe includes the columns:
-            source, target, overlapCoeff, width and label. These map the terms from the enrichInfo
-            dataframe and serve to show the overlap between terms for downstream visualization purposes
-            and for understanding the relationship between terms;
+   cluster: cluster color based on overlap of term ID, set as 50%
+   id: cluster ID
+   size: node size for downstream plotting based on FDR score
+   formatted label: for downstream plotting
+columns edgeMat:
+   source
+   target
+   overlapCoeff
+   width
+   label
+   These map GO terms from the enrichInfo serving to show the
+   overlap between terms for downstream visualization purposes
+   and for understanding the relationship between terms
+v@export
+}
+\description{
+This function performs a GO enrichment analysis using the hypergeometric
+test for the set of query genes passing the user-defined fitness score
+threshold compared to the genes in the background set (universe).
 }

@@ -2,15 +2,15 @@
 % Please edit documentation in R/2022_March13_GORESP.R
 \name{hyperG}
 \alias{hyperG}
-\title{computes enrichment using the hypergeometric test given:}
+\title{hyperG}
 \usage{
 hyperG(
   querySet,
   geneSets,
   uni,
   scoreMat,
-  minSetSize = minGeneSetSize,
-  maxSetSize = maxGeneSetSize,
+  minSetSize = 5,
+  maxSetSize = 300,
   uniSize = NA
 )
 }
@@ -28,12 +28,22 @@ hyperG(
 - third column = fitness scores, descending order
 - can be NULL}
 
-\item{maxSetSize}{max number of genes in geneSets (after restricting to the gene universe)}
+\item{minSetSize}{lower limit on the number of genes in a geneset included in the analysis
+(after restricting to the gene universe)}
+
+\item{maxSetSize}{upper limit on the number of genes in a geneset included in the analysis
+(after restricting to the gene universe)}
 
 \item{uniSize}{the number of genes in the universe}
 }
 \value{
-dataframe of enrichment results, sorted by increasing FDR value. The columns are:
+dataframe of enrichment results, sorted by increasing FDR value.
+}
+\description{
+computes enrichment using the hypergeometric test given:
+}
+\details{
+The columns of the dataframe are:
         querySetFraction = the fraction of the query set that overlaps with the term set
         geneSetFraction = the fraction of the term set that overlaps with the query set
         foldEnrichment = the fold enrichment of the query set with the term genes
@@ -42,7 +52,4 @@ dataframe of enrichment results, sorted by increasing FDR value. The columns are
         overlapGenes = a |-separated list of genes in the overlap of the query set and the term set;
                        if scoreMat is provided (not NULL), the scores of the genes are shown in parentheses
        maxOverlapGeneScore = if scoreMat is provided (not NULL), the maximum score of the overlapGenes
-}
-\description{
-computes enrichment using the hypergeometric test given:
 }

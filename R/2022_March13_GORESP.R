@@ -1,39 +1,32 @@
 
 
-####  GO enrichment function
-####  curr_exp is name of experiment
-####  mat = experimental matrix
-####  coln = coln of mat with fitness defect scores for enrichment
-####  sig = significance threshold for GO enrichment of fitness defect scores
-####  bp_path = path of GOSET RDS file
-####  minGeneSetSize = minimum size of geneSet to include in enrichment
-####  maxSetSize = (not an option) maximum size of geneSet to include in enrichment -- set to 300
-####  query fraction is length of overlap divided by number of genes scored significant in screen
-####  geneSet is length of genes in the geneSet
-####  overlap is length of intersect
-####  bgRate round rate is nGenes/total number of rows in unigene set (matrix)
-####  foldenrichment query fraction /bgRate
-####  foldenrichment * bgRate = query fraction
 
-#'     @param mat matrix of fitness data
-#'     @param coln the column of the matrix with sample of interest
-#'     @param curr_exp name of exp, usually after the sample name so set to colnames(mat)[coln]
-#'     @param sig significance threshold of fitness defect score, default is 1
-#'     @param fdrThresh fdr threshold for significance cutoff of enrichments, default = 0.2
-#'     @param bp_path path of gmt file
-#'     @param bp_input alternatively th gmt file itself, **Note: bp_path and bp_input can't both be NULL
-#'     @param go_path path of file with GOID and terms path of gmt file alternatively bp_input, gmt file itself,
-#'     @param go_input alternatively the file with GOID and terms itself **Note: go_path and go_input can both be NULL
-#'     @param minGeneSetSize lower limit on the number of genes in a geneset included in the analysis, default = 5
-#'     @param maxGeneSetSize upper limit on the number of genes in a geneset included in the analysis,default = 300
-#'
-#'
-#'     RETURNS two dataframes of enrichment results, sorted by increasing FDR value.
-#'
-#'     @return enrichInfo dataframe includes the columns: filename,term, nGenes, nQuery, nOverlap,
-#'     querySetFraction, geneSetFraction, foldEnrichment, P, FDR, overlapGenes, maxOverlapGeneScore and columns used for visuealization purposes such as
-#'     cluster, id, size and formattedLabel
-#'
+
+#' @title runGORESP
+#' @description This function performs a GO enrichment analysis using the hypergeometric
+#' test for the set of query genes passing the user-defined fitness score
+#' threshold compared to the genes in the background set (universe).
+#' @param mat numeric matrix of fitness data
+#' @param coln mumeric. the column of the matrix with sample of interest
+#' @param curr_exp character, name of exp, usually after the sample name so set to colnames(mat)[coln]
+#' @param sig mumeric, significance threshold of fitness defect score, default is 1
+#' @param fdrThresh numeric, fdr threshold for significance cutoff of enrichments, default = 0.2
+#' @param bp_path character, path of gmt file
+#' @param bp_input gmt file or NULL, **Note: bp_path and bp_input can't both be NULL
+#' @param go_path character, path of file with GOID and terms path of gmt file alternatively bp_input, gmt file itself,
+#' @param go_input dataframe with GOID and terms matching bp_input  **Note: go_path and go_input can both be NULL
+#' @param minGeneSetSize numeric, lower limit on the number of genes in a geneset included in the analysis, default = 5
+#' @param maxGeneSetSize numeric, upper limit on the number of genes in a geneset included in the analysis,default = 300
+#' @return RETURNS two dataframes: enrichInfo with enrichment results and edgeMat with information about
+#' geneset term overlap and clusters.
+#' dataframe includes the columns: filename,term, nGenes, nQuery, nOverlap,
+#'v@details columns enrichInfo:
+#'     filename
+#'     GOID: GO ID
+#'     term: GO term
+#'     nGenes: # genes in the geneset
+#'     nQuery: # genes in the query
+#'     nOverlap: # genes overlapping the query and the geneset
 #'     querySetFraction: the fraction of the query set (the set that passes the significance threshold)
 #'      that overlaps with the term set
 #'     geneSetFraction: the fraction of the term set that overlaps with the query set
@@ -44,13 +37,22 @@
 #'     overlapGenes = a |-separated list of genes that overlap the query set and the geneSet
 #'                        if scoreMat is provided (not NULL), the scores of the genes are shown in parentheses
 #'	   maxOverlapGeneScore = if scoreMat is provided (not NULL), the maximum score of the overlapGenes
-#'	    @return edgeMat dataframe includes the columns:
-#'	            source, target, overlapCoeff, width and label. These map the terms from the enrichInfo
-#'	            dataframe and serve to show the overlap between terms for downstream visualization purposes
-#'	            and for understanding the relationship between terms;
-#' @export
+#'	   cluster: cluster color based on overlap of term ID, set as 50%
+#'	   id: cluster ID
+#'	   size: node size for downstream plotting based on FDR score
+#'	   formatted label: for downstream plotting
+#' columns edgeMat:
+#'	   source
+#'	   target
+#'	   overlapCoeff
+#'	   width
+#'	   label
+#'	   These map GO terms from the enrichInfo serving to show the
+#'	   overlap between terms for downstream visualization purposes
+#'	   and for understanding the relationship between terms
+#'v@export
 runGORESP = function (mat,coln,curr_exp = colnames(mat)[coln], sig = 1, fdrThresh = 0.2, bp_path = NULL,bp_input = NULL,
-                      go_path = NULL,go_input = NULL,minGeneSetSize = 5,maxGeneSetSize=300){
+                      go_path = NULL,go_input = NULL,minGeneSetSize = 5,maxGeneSetSize = 300){
 
 
 ##############
@@ -483,7 +485,8 @@ compSCORE <- function(mat,coln, sig = 1){
 }
 
 
-#' computes enrichment using the hypergeometric test given:
+#' @title hyperG
+#' @description computes enrichment using the hypergeometric test given:
 #' @param querySet character vector of genes in query set, genes with significant fitness defect scores
 #' @param geneSets named list of gene sets to test for significant overlap w/ the query set
 #' @param scoreMat dataframe of gene scores
@@ -499,7 +502,8 @@ compSCORE <- function(mat,coln, sig = 1){
 #' @param minSetSize lower limit on the number of genes in a geneset included in the analysis
 #' (after restricting to the gene universe)
 #'
-#' @return dataframe of enrichment results, sorted by increasing FDR value. The columns are:
+#' @return dataframe of enrichment results, sorted by increasing FDR value.
+#' @details The columns of the dataframe are:
 #          term = name of gene set
 #'         querySetFraction = the fraction of the query set that overlaps with the term set
 #'         geneSetFraction = the fraction of the term set that overlaps with the query set
@@ -561,14 +565,16 @@ hyperG = function (querySet, geneSets, uni, scoreMat, minSetSize = 5,
   enrichCol = enrichCol[order(enrichCol$FDR), ]
 }
 
-#' computes a dataframe of significant fitness scores from a matrix of significance scores
-#' defined by a fitness score cutoff
-#' @param mat matrix of fitness scores
-#' @param coln column # of matrix with the sample of interest
-#' @param sig = significance threshold, default = 1
-#' @return dataframe with 3 columns: gene, index, score. index indicating significant if 1,
-#' nonsignificant if 0
-#' @export
+#'@title compSCORE:
+#'@description computes a dataframe of designating significant fitness scores from a
+#'matrix of screening data
+#'@param mat numeric matrix of fitness scores
+#'@param coln numeric, column # of matrix with the sample of interest
+#'@param sig numeric, significance threshold, default = 1
+#'@return dataframe with 3 columns: gene, index, score. index indicating significant 1,
+#' or nonsignificant, 0
+#'@export
+#'@importFrom dplyr "%>%"
 
 compSCORE <- function(mat,coln, sig = 1){
    df = data.frame(score = mat[,coln],stringsAsFactors = F)
@@ -583,7 +589,8 @@ compSCORE <- function(mat,coln, sig = 1){
    df
    }
 ############
-#' visSetup: this function takes the output from runGORESP generates objects for drawing GO enrichment networks
+#' @title visSetup
+#' @description this function takes the output from runGORESP generates objects for drawing GO enrichment networks
 #' @param enrichInfo a data frame, see ??runGORESP enrichInfo output for explanation of these columns
 #' @param edgeMat a data frame, see ??runGORESP edgeMat output for explanation of these columns
 #' @param fontsize fontsize
@@ -691,20 +698,16 @@ visSetup = function(enrichInfo, edgeMat, fontsize = 22, fontface = "Arial") {
 }
 ############
 
-#' runNetwork: takes the output from visSetup generating a network of nodes comprised of
-#' geheSets defined by Gene Ontology (GO) biological processes. Analysis is restricted
-#' to genesets comprised at least 5 (minGeneSetSize) and not more than 300 genes (maxGeneSetSize).
+#' @title runNetwork
+#' @description Uses the output from visSetup to generate a network of gene enrrichments.
 #' @param nodes dataframe returned from visSetup, "nodes" see ?? visSetup
 #' @param edges dataframe returned from visSetup, "edges" see ?? visSetup
 #' @param height A numeric value
 #' @return network
-#' The significance of the enrichments was estimated using the hypergeometric test
-#' for the set of genes passing the fitness score threshold.connected by edges.
-#' The enrichment of a GO gene set is driven by the gene subset also present in the
-#' query set derived from the genes passing the fitness score threshold. In some cases,
-#' a similar set of query set genes drives the enrichment of multiple GO gene sets.
-#' Of these GO sets, we highlight the most significantly enriched, and the rest are
-#' considered redundant.
+#' @details The larger a node in the netwark, the more significance the
+#' GO enrichment for that term. The thicker the edge connecting twa nodes,
+#' the greater the overlap betweem twp terms. Bold and enlarged font size
+#' indicate the most enriched term for a given cluster.
 #' @export
 runNetwork <- function(nodes,edges, height = 1300, main = list(text = nodes$filename[1],
 style = "font-size:40px;text-align:center;"),...){
