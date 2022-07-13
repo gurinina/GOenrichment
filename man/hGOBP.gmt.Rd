@@ -2,7 +2,7 @@
 % Please edit documentation in R/omic.R
 \name{hGOBP.gmt}
 \alias{hGOBP.gmt}
-\title{BP genesets from Homo sapiens}
+\title{Homo sapiens GO biological process (BP) genesets}
 \format{
 gmt file: a list of BP genesets where names = GO term
 }
@@ -10,6 +10,8 @@ gmt file: a list of BP genesets where names = GO term
 \url{http://baderlab.org/GeneSets}
 }
 \description{
-GO biological process (BP) genesets from
-Downloaded from Gary Bader's lab in July 2022
+BP genesets were downloaded from Gary Bader's
+lab in July 2022: human_go_bp_no_go_iea_entrezgene.gmt
+(biological process minus those annoted using evidence code
+inferred by electronic annotation (IEA))
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/omic.R
 \name{yGOBP.gmt}
 \alias{yGOBP.gmt}
-\title{BP genesets from Saccharomyces cerevisiae}
+\title{Saccharomyces GO biological process (BP) genesets}
 \format{
 gmt file: a list of BP genesets where names = GO term
 }
@@ -10,6 +10,6 @@ gmt file: a list of BP genesets where names = GO term
 \url{http://current.geneontology.org/products/pages/downloads.html}
 }
 \description{
-GO biological process (BP) genesets from
-Saccharomyces cerevisiae downloaded in January 2022
+BP genesets were downloaded in January 2022
+from the Gene Ontolog Consortium (link below).
 }

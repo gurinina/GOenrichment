@@ -2,7 +2,8 @@
 % Please edit documentation in R/omic.R
 \name{dfGOBP}
 \alias{dfGOBP}
-\title{BP genesets from Saccharomyces cerevisiae}
+\title{Dataframe listing Saccharomyces cerevisiae GOIDs and terms,
+geneSetSizes, geneSet members}
 \format{
 Dataframe listing GOIDs and terms
   \describe{
@@ -16,6 +17,7 @@ Dataframe listing GOIDs and terms
 \url{http://current.geneontology.org/products/pages/downloads.html}
 }
 \description{
-GO biological process (BP) genesets from
-Saccharomyces cerevisiae downloaded in January 2022
+Dataframe GOID terms correspond to names(yGOBP)
+annotations were downloaded in January 2022 from Gene Ontolog
+Consortium (link below)
 }

@@ -196,10 +196,10 @@ clusterEnrich = function (enrichInfo, geneSets, fdrThresh = 0.1, overlapThresh =
                             go_path = go_path, go_input = go_input){
 
 
-  go_file = file.path(go_path)
-  if(!is.null(go_path)) goTable = utils::read.delim(go_file,stringsAsFactors = F,check.names = F)
-  if(!is.null(go_input))  {goTable = go_input}
-
+    go_file = file.path(go_path)
+    if(!is.null(go_path)) goTable = utils::read.delim(go_file,stringsAsFactors = F,check.names = F)
+    if(!is.null(go_input))  {goTable = go_input}
+    if(is.null(go_input)& is.null(go_path)) goTable = NULL
 
   nodeSizeRange <- c(10, 40)
   prunedCol <- "#BEBEBE"
@@ -402,9 +402,11 @@ compSCORE <- function(mat,coln, sig = 1){
 
   edgeMat = q$edgeMat
   enrichInfo = q$enrichInfo
-  m = match(enrichInfo$term,go_input$term)
-      table(is.na(m))
-      enrichInfo$GOID = go_input$GOID[m]
+
+
+  # m = match(enrichInfo$term,go_input$term)
+  #     table(is.na(m))
+  #     enrichInfo$GOID = go_input$GOID[m]
 
   if(!is.null(enrichInfo)) {
 
@@ -444,7 +446,7 @@ compSCORE <- function(mat,coln, sig = 1){
     go_file = file.path(go_path)
     if(!is.null(go_path)) goTable = utils::read.delim(go_file,stringsAsFactors = F,check.names = F)
     if(!is.null(go_input))  {goTable = go_input}
-
+    if(is.null(go_input)& is.null(go_path)) goTable = NULL
     # wnam = which(names(enrichInfo)%in% nam)
     # print(nam[wnam])
 
@@ -457,7 +459,7 @@ compSCORE <- function(mat,coln, sig = 1){
 
 
     enrichInfo = enrichInfo[,nam]}
-    sdf = setdiff(nam,names(enrichInfo))
+
 
     if(is.null(go_path)&is.null(go_input)) {nam2 = c(
       "filename",
