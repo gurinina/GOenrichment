@@ -37,3 +37,4 @@ NULL
 #' @format numeric 4956 x 2 matrix, genes in rows,sample in columns
 #' @author G.Giaever & C.Nislow
 #' @source \url{https://www.ggcnlab.com/}
+NULL

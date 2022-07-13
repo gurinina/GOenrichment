@@ -2,6 +2,7 @@
 
 export(compSCORE)
 export(hyperG)
+export(runGORESP)
 export(runNetwork)
 export(visSetup)
 importFrom(dplyr,"%>%")
