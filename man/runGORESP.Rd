@@ -14,8 +14,8 @@ runGORESP(
   bp_input = NULL,
   go_path = NULL,
   go_input = NULL,
-  minGeneSetSize = 5,
-  maxGeneSetSize = 300
+  minSetSize = 5,
+  maxSetSize = 300
 )
 }
 \arguments{
@@ -37,15 +37,22 @@ runGORESP(
 
 \item{go_input}{dataframe with GOID and terms matching bp_input  **Note: go_path and go_input can both be NULL}
 
-\item{minGeneSetSize}{numeric, lower limit on the number of genes in a geneset included in the analysis, default = 5}
+\item{minSetSize}{numeric, lower limit on the number of genes in a geneset included in the analysis, default = 5}
 
-\item{maxGeneSetSize}{numeric, upper limit on the number of genes in a geneset included in the analysis,default = 300}
+\item{maxSetSize}{numeric, upper limit on the number of genes in a geneset included in the analysis,default = 300}
 }
 \value{
 RETURNS two dataframes: enrichInfo with enrichment results and edgeMat with information about
 geneset term overlap and clusters.
 dataframe includes the columns: filename,term, nGenes, nQuery, nOverlap,
-v@details columns enrichInfo:
+}
+\description{
+This function performs a GO enrichment analysis using the hypergeometric
+test for the set of query genes passing the user-defined fitness score
+threshold compared to the genes in the background set (universe).
+}
+\details{
+columns enrichInfo:
     filename
     GOID: GO ID
     term: GO term
@@ -75,10 +82,4 @@ columns edgeMat:
    These map GO terms from the enrichInfo serving to show the
    overlap between terms for downstream visualization purposes
    and for understanding the relationship between terms
-v@export
-}
-\description{
-This function performs a GO enrichment analysis using the hypergeometric
-test for the set of query genes passing the user-defined fitness score
-threshold compared to the genes in the background set (universe).
 }

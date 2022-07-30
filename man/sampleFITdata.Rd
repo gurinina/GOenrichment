@@ -3,22 +3,9 @@
 \name{sampleFITdata}
 \alias{sampleFITdata}
 \title{sample fitness data from Saccharomyces cerevisiae}
-\format{
-numeric 4956 x 2 matrix, genes in rows,sample in columns
-}
 \source{
 \url{https://www.ggcnlab.com/}
 }
 \description{
 HOP chemogenomic screening data from G. Giaever & C. Nislow labs
 }
-\details{
-Chemogenomic Profilimg data from Saccharomyces cerevisiae
-}
-\author{
-G.Giaever & C.Nislow
-}
-\keyword{chemogenomics,}
-\keyword{competitive}
-\keyword{fitness}
-\keyword{profiling}

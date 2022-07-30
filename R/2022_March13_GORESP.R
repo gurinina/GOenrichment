@@ -15,12 +15,12 @@
 #' @param bp_input gmt file or NULL, **Note: bp_path and bp_input can't both be NULL
 #' @param go_path character, path of file with GOID and terms path of gmt file alternatively bp_input, gmt file itself,
 #' @param go_input dataframe with GOID and terms matching bp_input  **Note: go_path and go_input can both be NULL
-#' @param minGeneSetSize numeric, lower limit on the number of genes in a geneset included in the analysis, default = 5
-#' @param maxGeneSetSize numeric, upper limit on the number of genes in a geneset included in the analysis,default = 300
+#' @param minSetSize numeric, lower limit on the number of genes in a geneset included in the analysis, default = 5
+#' @param maxSetSize numeric, upper limit on the number of genes in a geneset included in the analysis,default = 300
 #' @return RETURNS two dataframes: enrichInfo with enrichment results and edgeMat with information about
 #' geneset term overlap and clusters.
 #' dataframe includes the columns: filename,term, nGenes, nQuery, nOverlap,
-#'v@details columns enrichInfo:
+#' @details columns enrichInfo:
 #'     filename
 #'     GOID: GO ID
 #'     term: GO term
@@ -50,19 +50,15 @@
 #'	   These map GO terms from the enrichInfo serving to show the
 #'	   overlap between terms for downstream visualization purposes
 #'	   and for understanding the relationship between terms
-#'v@export
+#' @export
 runGORESP = function (mat,coln,curr_exp = colnames(mat)[coln], sig = 1, fdrThresh = 0.2, bp_path = NULL,bp_input = NULL,
-                      go_path = NULL,go_input = NULL,minGeneSetSize = 5,maxGeneSetSize = 300){
+                      go_path = NULL,go_input = NULL,minSetSize = 5,maxSetSize = 300){
 
 
 ##############
 CLUST.COL <- c("#FF00CC","#33CCFF", "#33CC00", "#9900FF", "#FF9900", "#FFFF00", "#FFCCFF", "#FF0000", "#006600", "#009999", "#CCCC00", "#993300", "#CC99CC", "#6699CC","#CCCCFF", "#FFCC99", "#9966FF", "#CC6600", "#CCFFFF", "#99CC00", "#FF99FF", "#0066FF", "#66FFCC", "#99CCFF", "#9999CC", "#CC9900", "#CC33FF", "#006699", "#F5DF16", "#B5185E", "#99FF00", "#00FFFF", "#990000", "#CC0000", "#33CCCC", "#CC6666", "#996600", "#9999FF", "#3366FF")
 
 prunedCol <- "#BEBEBE"
-
-
-
-
 
 ##### required functions
 # computes the number of unique pairs given the number of items to consider
@@ -76,11 +72,6 @@ getUniquePairs = function (maxVal)
   })
   cbind(firstI, unlist(secondI))
 }
-
-
-
-##############
-
 
 # computes enrichment using the hypergeometric test, and uses the resulting P values with
 # the Benjamini Hochberg method to estimate FDR values
@@ -103,8 +94,8 @@ getUniquePairs = function (maxVal)
 #         overlapGenes = a |-separated list of genes in the overlap of the query set and the term set;
 #                        if scoreMat is provided (not NULL), the scores of the genes are shown in parentheses
 #	  maxOverlapGeneScore = if scoreMat is provided (not NULL), the maximum score of the overlapGenes
-hyperG = function (querySet, geneSets, uni, scoreMat, minSetSize = minGeneSetSize,
-  maxSetSize = maxGeneSetSize, uniSize = NA)
+hyperG = function (querySet, geneSets, uni, scoreMat, minSetSize = 5,
+  maxSetSize = 300, uniSize = NA)
 {
   if (!is.null(uni)) {
     geneSets <- lapply(geneSets, intersect, uni)
@@ -153,9 +144,6 @@ hyperG = function (querySet, geneSets, uni, scoreMat, minSetSize = minGeneSetSiz
   rownames(enrichCol) <- NULL
   enrichCol = enrichCol[order(enrichCol$FDR), ]
 }
-#
-
-
 
 #######the overlap of genesets for all combinations
 #######If set X is a subset of Y or the converse then the overlap coefficient is equal to 1.
@@ -170,6 +158,8 @@ overlapCoeff = function (gsPairList)
     length(gsPairList[[2]]))
 }
 
+
+
 ####### given enrichInfo after hyperG, computes edgeMat for making enrichment map
 # generates an enrichment map in xgmml format using hypergeometric test statistics
 # enrichInfo - dataframe with enrichment stats for gene sets (one per row), with the following columns:
@@ -182,8 +172,6 @@ overlapCoeff = function (gsPairList)
 # overlapThresh - an edge between a pair of enriched gene sets will only be shown if the overlap coefficient
 #              is >= overlapThresh
 
-
-
 # goTable - a dataframe with the following columns describing GO terms:
 #         - "term" (GO term), "id" (GOID)
 #         - if provided (i.e. not NULL), the GO ID numbers of the enriched GO terms will be saved in
@@ -193,13 +181,10 @@ overlapCoeff = function (gsPairList)
 ###############
 #### query set is genes with significant fitness defect, uni is all the genes in the data matrix, the union
 clusterEnrich = function (enrichInfo, geneSets, fdrThresh = 0.1, overlapThresh = 0.5,
-                            go_path = go_path, go_input = go_input){
+                            goTable = NULL){
 
 
-    go_file = file.path(go_path)
-    if(!is.null(go_path)) goTable = utils::read.delim(go_file,stringsAsFactors = F,check.names = F)
-    if(!is.null(go_input))  {goTable = go_input}
-    if(is.null(go_input)& is.null(go_path)) goTable = NULL
+
 
   nodeSizeRange <- c(10, 40)
   prunedCol <- "#BEBEBE"
@@ -346,6 +331,7 @@ compSCORE <- function(mat,coln, sig = 1){
   df$gene = rownames(mat)
   rownames(df) = df$gene
   df$index=0
+
   wdf = which(df$score >= sig)
   df$index[wdf]=1
   df = df[,c('index','score','gene')]
@@ -374,8 +360,8 @@ compSCORE <- function(mat,coln, sig = 1){
 
 
   enrichMat.mn <- hyperG(querySet = queryGenes.mn, geneSets = bp,
-                           uni = uniGenes.mn, scoreMat = score, minSetSize = minGeneSetSize,
-                           maxSetSize = maxGeneSetSize, uniSize = NA)
+                           uni = uniGenes.mn, scoreMat = score, minSetSize = minSetSize,
+                           maxSetSize = maxSetSize, uniSize = NA)
   curr_exp = colnames(mat)[coln]
   queryGeneSets = list()
   queryGeneSets[[curr_exp]] = queryGenes.mn
@@ -390,23 +376,26 @@ compSCORE <- function(mat,coln, sig = 1){
 #   nonEnrichMat.mn <- genesNotInEnrichedTerm(queryGeneSets,
 #                                               enrichMat.mn, scoreMat, NONSPECIFIC.TERMS$bp, fdrThresh)
 #
-  maxSetSize = maxGeneSetSize
+
   #### intersect of the geneSets with the backgroundSet, filtering for size
   bp <- lapply(bp, intersect, uniGenes.mn)
   lens <- sapply(bp, length)
-  bp <- bp[lens >= minGeneSetSize & lens <= maxGeneSetSize]
+  bp <- bp[lens >= minSetSize & lens <= maxSetSize]
+
+
+  go_file = file.path(go_path)
+  if(!is.null(go_path)) goTable = utils::read.delim(go_file,stringsAsFactors = F,check.names = F)
+  if(!is.null(go_input))  {goTable = go_input}
+  if(is.null(go_input)& is.null(go_path)) goTable = NULL
 
   q = clusterEnrich(enrichInfo = enrichMat.mn, geneSets = bp,
                       fdrThresh = fdrThresh, overlapThresh = 0.5,
-                      go_path = go_path,go_input = go_input)
+                      goTable = goTable)
 
   edgeMat = q$edgeMat
   enrichInfo = q$enrichInfo
 
 
-  # m = match(enrichInfo$term,go_input$term)
-  #     table(is.na(m))
-  #     enrichInfo$GOID = go_input$GOID[m]
 
   if(!is.null(enrichInfo)) {
 
@@ -443,10 +432,6 @@ compSCORE <- function(mat,coln, sig = 1){
       "formattedLabel"
     )
 
-    go_file = file.path(go_path)
-    if(!is.null(go_path)) goTable = utils::read.delim(go_file,stringsAsFactors = F,check.names = F)
-    if(!is.null(go_input))  {goTable = go_input}
-    if(is.null(go_input)& is.null(go_path)) goTable = NULL
     # wnam = which(names(enrichInfo)%in% nam)
     # print(nam[wnam])
 
@@ -461,7 +446,7 @@ compSCORE <- function(mat,coln, sig = 1){
     enrichInfo = enrichInfo[,nam]}
 
 
-    if(is.null(go_path)&is.null(go_input)) {nam2 = c(
+    if(is.null(goTable)) {nam2 = c(
       "filename",
 
       "term",

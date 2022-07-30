@@ -29,12 +29,8 @@ NULL
 #' }
 #' @source \url{http://current.geneontology.org/products/pages/downloads.html}
 NULL
-#' Chemogenomic Profilimg data from Saccharomyces cerevisiae
 #' @name sampleFITdata
 #' @title sample fitness data from Saccharomyces cerevisiae
-#' @keywords chemogenomics, competitive fitness profiling
 #' @description HOP chemogenomic screening data from G. Giaever & C. Nislow labs
-#' @format numeric 4956 x 2 matrix, genes in rows,sample in columns
-#' @author G.Giaever & C.Nislow
 #' @source \url{https://www.ggcnlab.com/}
 NULL
