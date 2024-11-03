@@ -65,3 +65,6 @@ rsconnect/
 *.rds
 html/
 help/
+data/Rdata.rds
+data/Rdata.rdx
+data/Rdata.rdb
