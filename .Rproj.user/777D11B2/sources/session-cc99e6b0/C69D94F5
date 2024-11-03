@@ -1,0 +1,26 @@
+{
+    "id": "C69D94F5",
+    "path": "~/Dropbox/Documents/RProjects/GOenrichment/R/.R/visSetup.R",
+    "project_path": "R/.R/visSetup.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1730607835761.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "26,10",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1730619088,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1730619088082,
+    "read_only": false,
+    "read_only_alternatives": []
+}
