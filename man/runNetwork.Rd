@@ -21,7 +21,7 @@ runNetwork(
 \item{main}{character title list, includes font size and color if desired}
 }
 \value{
-
+NULL, but produces a plot (or other side effect)
 }
 \description{
 Generates a network of GO enrichments.using the output from visSetup

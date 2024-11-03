@@ -46,25 +46,31 @@
 #' length(gsPairList[[2]]))}
 #' width
 #' label These map GO terms from the enrichInfo data.frame serving to show the overlap between terms for downstream visualization purposes and for understanding the relationship between terms
-#' @return A data frame with three columns:
+#' @return A list with two data frames:
 #' \describe{
-#'   \item{querySetFraction}{the fraction of the query set that overlaps with the term set}
-#'   \item{geneSetFraction}{the fraction of the term set that overlaps with the query set}
-#'   \item{foldEnrichment}{the fold enrichment of the query set with the term genes}
-#'   \item{P}{P value estimating the significance with which the query set is enriched with the term genes}
-#'   \item{FDR}{FDR value estimating the significance of enrichment }
-#'   \item{overlapGenes}{A |-separated list of genes in the overlap of the query set and the term set}
-#'   \item{mat}{numeric matrix of fitness data}
-#'   \item{coln}{mumeric. the column of the matrix with sample of interest}
-#'   \item{curr_exp}{character, name of exp, usually after the sample name so set to colnames(mat)[coln]}
-#'   \item{sig}{mumeric, significance threshold of fitness defect score, default is 1}
-#'   \item{fdrThresh}{numeric, fdr threshold for significance cutoff of enrichments, default = 0.2}
-#'   \item{bp_path}{character, path of gmt file}
-#'   \item{bp_input}{gmt file or NULL, **Note: bp_path and bp_input can't both be NULL}
-#'   \item{go_path}{character, path of file with GOID and terms path of gmt file alternatively bp_input, gmt file itself,}
-#'   \item{go_input}{dataframe with GOID and terms matching bp_input  **Note: go_path and go_input can both be NULL}
-#'   \item{minSetSize}{numeric, lower limit on the number of genes in a geneset included in the analysis, default = 5}
-#'   \item{maxSetSize}{numeric, upper limit on the number of genes in a geneset included in the analysis,default = 300}
+#'   \item{enrichInfo}{Data frame with GO enrichment results, including columns:}
+#'   \describe{
+#'     \item{querySetFraction}{The fraction of the query set overlapping the term set.}
+#'     \item{geneSetFraction}{The fraction of the term set overlapping the query set.}
+#'     \item{foldEnrichment}{The fold enrichment of the query set with term genes.}
+#'     \item{P}{P-value estimating significance of query set enrichment.}
+#'     \item{FDR}{False discovery rate for enrichment significance.}
+#'     \item{overlapGenes}{A list of genes in the overlap between query and term set.}
+#'     \item{maxOverlapGeneScore}{The maximum score among overlapping genes if \code{scoreMat} is provided.}
+#'     \item{cluster}{Cluster color information based on term ID overlap.}
+#'     \item{id}{Cluster ID.}
+#'     \item{size}{Node size for plotting based on FDR score.}
+#'     \item{formattedLabel}{Label formatted for downstream visualization.}
+#'   }
+#'   \item{edgeMat}{Data frame with information about gene set term overlaps, for visualization, including columns:}
+#'   \describe{
+#'     \item{source}{ID from enrichInfo, representing the source node in the overlap network.}
+#'     \item{target}{ID from enrichInfo, representing the target node in the overlap network.}
+#'     \item{overlapCoeff}{Coefficient representing the overlap between terms.}
+#'     \item{width}{Edge width based on overlap, used for visualization.}
+#'     \item{label}{Label showing overlap between terms for downstream visualization.}
+#'   }
+#' }
 #' @importFrom dplyr arrange desc
 #' @examples
 #' # Example usage:

@@ -80,7 +80,31 @@ length(gsPairList[[2]]))}
 width
 label These map GO terms from the enrichInfo data.frame serving to show the overlap between terms for downstream visualization purposes and for understanding the relationship between terms
 
-
+A list with two data frames:
+\describe{
+  \item{enrichInfo}{Data frame with GO enrichment results, including columns:}
+  \describe{
+    \item{querySetFraction}{The fraction of the query set overlapping the term set.}
+    \item{geneSetFraction}{The fraction of the term set overlapping the query set.}
+    \item{foldEnrichment}{The fold enrichment of the query set with term genes.}
+    \item{P}{P-value estimating significance of query set enrichment.}
+    \item{FDR}{False discovery rate for enrichment significance.}
+    \item{overlapGenes}{A list of genes in the overlap between query and term set.}
+    \item{maxOverlapGeneScore}{The maximum score among overlapping genes if \code{scoreMat} is provided.}
+    \item{cluster}{Cluster color information based on term ID overlap.}
+    \item{id}{Cluster ID.}
+    \item{size}{Node size for plotting based on FDR score.}
+    \item{formattedLabel}{Label formatted for downstream visualization.}
+  }
+  \item{edgeMat}{Data frame with information about gene set term overlaps, for visualization, including columns:}
+  \describe{
+    \item{source}{ID from enrichInfo, representing the source node in the overlap network.}
+    \item{target}{ID from enrichInfo, representing the target node in the overlap network.}
+    \item{overlapCoeff}{Coefficient representing the overlap between terms.}
+    \item{width}{Edge width based on overlap, used for visualization.}
+    \item{label}{Label showing overlap between terms for downstream visualization.}
+  }
+}
 }
 \description{
 GO enrichment analysis using the hypergeometric test
