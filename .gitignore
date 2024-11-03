@@ -23,9 +23,12 @@
 
 # RStudio files
 .Rproj.user/
+<<<<<<< HEAD
 .Rproj.user/.DS_Store
 .Rproj.user
 
+=======
+>>>>>>> 9af5ed3 (.gitignore)
 
 # produced vignettes
 vignettes/*.html
@@ -54,7 +57,6 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 
-.DS_store
 .DS_Store
 .Rproj.user/
 .RData
