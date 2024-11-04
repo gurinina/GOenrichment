@@ -20,7 +20,6 @@
 #'   \item{overlapGenes}{`|-` separated list of genes in the overlap between the query set and the term set.}
 #'   \item{maxOverlapGeneScore}{Maximum fitness score among the overlapping genes.}
 #' }
-#' @importFrom dplyr arrange desc
 #' @examples
 #' queryGenes.mn <- sort(unique(scoreMat$gene[which(scoreMat$index == 1)]))
 #' uniGenes.mn <- sort(unique(scoreMat$gene[!is.na(scoreMat$score)]))

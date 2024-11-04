@@ -4,7 +4,6 @@
 #'
 #' @param scoreMat Data frame with gene scores. The first column is "gene," the second is "index" (indicating significance with 1 or 0), and the third is "score" (fitness scores in descending order).
 #' @param curr_exp Character; experiment label for the analysis, default = "test".library(GOenrichment)
-
 #' @param fdrThresh Numeric; FDR threshold for enrichment significance, default = 0.2.
 #' @param bp_path Character; path to a .gmt file for biological process (BP) gene sets.
 #' @param bp_input List; gene sets in .gmt format. If provided, `bp_path` is ignored.
@@ -29,7 +28,6 @@
 #'   }
 #'   \item{edgeMat}{Data frame for gene set term overlaps, including source, target, and overlap coefficients for visualization.}
 #' }
-#' @importFrom dplyr arrange desc
 #' @examples
 #' # Example usage:
 #' scoreMat <- compSCORE(mat, coln, sig = sig)

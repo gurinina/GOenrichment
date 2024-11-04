@@ -12,7 +12,6 @@
 #'   \item{score}{The fitness score of the gene in the specified column.}
 #'   \item{gene}{The name of the gene, taken from the row names of `mat`.}
 #' }
-#' @importFrom dplyr arrange desc
 #' @examples
 #' # Example usage:
 #' mat <- matrix(c(0.5, 1.2, 1.5, 0.8, 1.8, 0.3), nrow = 3, byrow = TRUE)

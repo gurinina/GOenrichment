@@ -77,7 +77,7 @@ visSetup = function(enrichInfo, edgeMat, fontsize = 22, fontface = "Arial") {
   vis$nodes$overlapGenes = n$overlapGenes[m]
   vis$nodes$label = vis$nodes$formattedLabel
   vis$nodes$color.border = "black"
-  vis$nodes = vis$nodes %>% arrange(label)
+  vis$nodes = vis$nodes %>% dplyr::arrange(label)
   if (nrow(vis$edges) > 0)
     vis$edges$color = "black"
 
@@ -102,7 +102,7 @@ visSetup = function(enrichInfo, edgeMat, fontsize = 22, fontface = "Arial") {
     vis$nodes$borderWidth[w] = 4
     vis$nodes$font.bold[w] = T
   }
-  vis$nodes = vis$nodes %>% arrange(FDR)
+  vis$nodes = vis$nodes %>% dplyr::arrange(FDR)
   vis
 
 }

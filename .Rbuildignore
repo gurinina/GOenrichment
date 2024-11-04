@@ -1,5 +1,7 @@
 ^.*\.Rproj$
-^\.Rproj\.user$
-^library\.dynam$
-^library\.dynam\.unload$
-^system\.file$
+^\.Rhistory$
+^\.RData$
+^\.gitignore$
+^INDEX$
+^help$
+^html$
