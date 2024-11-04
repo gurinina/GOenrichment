@@ -9,7 +9,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports: igraph, visNetwork
-RoxygenNote: 7.3.2
-URL: https://github.com/gurinina/omic.data
-BugReports: https://github.com/gurinina/omic.data/issues
+RoxygenNote: 7.3.1
+URL: https://github.com/gurinina/GOenrichment
+BugReports: https://github.com/gurinina/GOenrichment/issues
 NeedsCompilation: no
