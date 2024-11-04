@@ -6,9 +6,13 @@
 \usage{
 runGORESP(
   scoreMat,
+<<<<<<< HEAD
   coln,
   curr_exp = colnames(mat)[coln],
   sig = 1,
+=======
+  curr_exp = "test",
+>>>>>>> 1a7120a (GORESP)
   fdrThresh = 0.2,
   bp_path = NULL,
   bp_input = NULL,
@@ -21,12 +25,17 @@ runGORESP(
 \arguments{
 \item{scoreMat}{Data frame with gene scores. The first column is "gene," the second is "index" (indicating significance with 1 or 0), and the third is "score" (fitness scores in descending order).}
 
+<<<<<<< HEAD
 \item{coln}{Column index in `scoreMat` for the experiment of interest.}
 
 \item{curr_exp}{Character; experiment label for the analysis, default = `colnames(scoreMat)[coln]`.}
 
 \item{sig}{Numeric; significance threshold for fitness score, default = 1.}
 
+=======
+\item{curr_exp}{Character; experiment label for the analysis, default = `colnames(scoreMat)[coln]`.}
+
+>>>>>>> 1a7120a (GORESP)
 \item{fdrThresh}{Numeric; FDR threshold for enrichment significance, default = 0.2.}
 
 \item{bp_path}{Character; path to a .gmt file for biological process (BP) gene sets.}

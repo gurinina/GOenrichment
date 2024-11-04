@@ -3,9 +3,7 @@
 #' Performs a GO enrichment analysis using the hypergeometric test for a set of query genes that pass a user-defined fitness score threshold. It compares the query genes against a background set (universe) and outputs enrichment and clustering information.
 #'
 #' @param scoreMat Data frame with gene scores. The first column is "gene," the second is "index" (indicating significance with 1 or 0), and the third is "score" (fitness scores in descending order).
-#' @param coln Column index in `scoreMat` for the experiment of interest.
 #' @param curr_exp Character; experiment label for the analysis, default = `colnames(scoreMat)[coln]`.
-#' @param sig Numeric; significance threshold for fitness score, default = 1.
 #' @param fdrThresh Numeric; FDR threshold for enrichment significance, default = 0.2.
 #' @param bp_path Character; path to a .gmt file for biological process (BP) gene sets.
 #' @param bp_input List; gene sets in .gmt format. If provided, `bp_path` is ignored.
@@ -40,7 +38,7 @@
 #'   bp_input = hGOBP.gmt, go_input = NULL, minSetSize = 20,
 #'   maxSetSize = 300)
 #' @export
-runGORESP <- function (scoreMat, coln, curr_exp = colnames(mat)[coln], sig = 1,
+runGORESP <- function (scoreMat, curr_exp = "test",
     fdrThresh = 0.2, bp_path = NULL, bp_input = NULL, go_path = NULL,
     go_input = NULL, minSetSize = 5, maxSetSize = 300){
 
@@ -254,7 +252,7 @@ runGORESP <- function (scoreMat, coln, curr_exp = colnames(mat)[coln], sig = 1,
     enrichMat.mn <- hyperG(querySet = queryGenes.mn, geneSets = bp,
         uni = uniGenes.mn, scoreMat = scoreMat, minSetSize = minSetSize,
         maxSetSize = maxSetSize, uniSize = NA)
-    curr_exp = colnames(mat)[coln]
+    curr_exp = "test"
     queryGeneSets = list()
     queryGeneSets[[curr_exp]] = queryGenes.mn
     enrichMat.mn$filename <- colnames(mat)[coln]
