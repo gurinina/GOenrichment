@@ -19,7 +19,7 @@ runGORESP(
 \arguments{
 \item{scoreMat}{Data frame with gene scores. The first column is "gene," the second is "index" (indicating significance with 1 or 0), and the third is "score" (fitness scores in descending order).}
 
-\item{curr_exp}{Character; experiment label for the analysis, default = `colnames(scoreMat)[coln]`.}
+\item{curr_exp}{Character; experiment label for the analysis, default = "test".}
 
 \item{fdrThresh}{Numeric; FDR threshold for enrichment significance, default = 0.2.}
 
