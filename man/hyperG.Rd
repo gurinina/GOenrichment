@@ -2,9 +2,7 @@
 % Please edit documentation in R/hyperG.R
 \name{hyperG}
 \alias{hyperG}
-\title{Ccomputes Gene ontology enrichment using the hypergeometric test
-The `hyperG` function evaluates a matrix of fitness scores to identify
-genes with scores above a specified significance threshold.}
+\title{Computes Gene Ontology enrichment using the hypergeometric test}
 \usage{
 hyperG(
   querySet,
@@ -17,37 +15,38 @@ hyperG(
 )
 }
 \arguments{
-\item{querySet}{character vector of genes in query set, genes with significant fitness defect scores}
+\item{querySet}{Character vector of genes in the query set with significant fitness scores.}
 
-\item{geneSets}{A numeric index specifying the column of `mat` to analyze for significance.}
+\item{geneSets}{List of gene sets (pathways or processes), each represented as a character vector of gene symbols.}
 
-\item{uni}{Character vector of genes in the universe (i.e. background set) - if NULL, must specify uniSize}
+\item{uni}{Character vector of genes in the universe (background set). If NULL, `uniSize` must be specified.}
 
-\item{scoreMat}{Dataframe of gene scores - first column = gene; column - second column = index, 1 and 0s designating significance - third column = fitness scores, descending order - can be NULL
-see function `compSCORE`}
+\item{scoreMat}{Data frame of gene scores. The first column is `gene`, the second column (`index`) indicates significance (1 for significant, 0 otherwise), and the third column is `score`, representing fitness scores in descending order. Can be NULL.}
 
-\item{minSetSize}{Lower limit on the number of genes in a geneset included in the analysis (after restricting to the gene universe)}
+\item{minSetSize}{Numeric, lower limit on the number of genes in a gene set included in the analysis after restricting to the universe.}
 
-\item{maxSetSize}{Upper limit on the number of genes in a geneset included in the analysis (after restricting to the gene universe)}
+\item{maxSetSize}{Numeric, upper limit on the number of genes in a gene set included in the analysis after restricting to the universe.}
 
-\item{uniSize}{The number of genes in the universe or length(uni)}
+\item{uniSize}{Numeric, the number of genes in the universe or length of `uni` if `uni` is provided.}
 }
 \value{
-Dataframe of enrichment results, sorted by increasing FDR value.
+Data frame of enrichment results, sorted by increasing FDR value.
 \describe{
-  \item{index}{A binary indicator of significance: 1 if the score is significant, 0 otherwise.}
-  \item{score}{The fitness score of the gene in the specified column.}
-  \item{gene}{The name of the gene, taken from the row names of `mat`.}
+  \item{term}{The name of the gene set.}
+  \item{querySetFraction}{Fraction of genes in the query set that are also in the gene set.}
+  \item{geneSetFraction}{Fraction of the gene set that overlaps with the query set.}
+  \item{foldEnrichment}{Fold enrichment of the query set with the term genes.}
+  \item{P}{P-value estimating the significance with which the query set is enriched with the term genes.}
+  \item{FDR}{False discovery rate (adjusted P-value) for the enrichment significance.}
+  \item{overlapGenes}{`|-` separated list of genes in the overlap between the query set and the term set.}
+  \item{maxOverlapGeneScore}{Maximum fitness score among the overlapping genes.}
 }
 }
 \description{
-Ccomputes Gene ontology enrichment using the hypergeometric test
-The `hyperG` function evaluates a matrix of fitness scores to identify
-genes with scores above a specified significance threshold.
+The `hyperG` function identifies enriched gene sets by comparing a query set of genes with significant fitness defect scores to a background universe of genes. The hypergeometric test assesses the significance of overlap between the query set and predefined gene sets.
 }
 \examples{
-# Example usage:
-mat <- matrix(c(0.5, 1.2, 1.5, 0.8, 1.8, 0.3), nrow = 3, byrow = TRUE)
-rownames(mat) <- c("Gene1", "Gene2", "Gene3")
-hyperG(mat, coln = 2, sig = 1)
+queryGenes.mn <- sort(unique(scoreMat$gene[which(scoreMat$index == 1)]))
+uniGenes.mn <- sort(unique(scoreMat$gene[!is.na(scoreMat$score)]))
+enrichMat.mn <- hyperG(querySet = queryGenes.mn, geneSets = hGOBP.gmt, uni = uniGenes.mn, scoreMat = score, minSetSize = minSetSize)
 }

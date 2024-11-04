@@ -1,8 +1,49 @@
-
-runGORESP <- function (mat, coln, curr_exp = colnames(mat)[coln], sig = 1,
+#' GO enrichment analysis using the hypergeometric test
+#'
+#' Performs a GO enrichment analysis using the hypergeometric test for a set of query genes that pass a user-defined fitness score threshold. It compares the query genes against a background set (universe) and outputs enrichment and clustering information.
+#'
+#' @param scoreMat Data frame with gene scores. The first column is "gene," the second is "index" (indicating significance with 1 or 0), and the third is "score" (fitness scores in descending order).
+#' @param coln Column index in `scoreMat` for the experiment of interest.
+#' @param curr_exp Character; experiment label for the analysis, default = `colnames(scoreMat)[coln]`.
+#' @param sig Numeric; significance threshold for fitness score, default = 1.
+#' @param fdrThresh Numeric; FDR threshold for enrichment significance, default = 0.2.
+#' @param bp_path Character; path to a .gmt file for biological process (BP) gene sets.
+#' @param bp_input List; gene sets in .gmt format. If provided, `bp_path` is ignored.
+#' @param go_path Character; path to file with GO terms and IDs, or NULL if using `go_input`.
+#' @param go_input Data frame; GO terms and IDs. If provided, `go_path` is ignored.
+#' @param minSetSize Numeric; minimum number of genes in a gene set for inclusion, default = 5.
+#' @param maxSetSize Numeric; maximum number of genes in a gene set for inclusion, default = 300.
+#' @param uniSize Numeric; number of genes in the universe, or length of `uni`.
+#' @return List containing:
+#' \describe{
+#'   \item{enrichInfo}{Data frame with GO enrichment results including columns:}
+#'   \describe{
+#'     \item{term}{Name of the GO term.}
+#'     \item{querySetFraction}{Fraction of the query set overlapping with the term set.}
+#'     \item{geneSetFraction}{Fraction of the term set overlapping with the query set.}
+#'     \item{foldEnrichment}{Fold enrichment of query genes within the GO term genes.}
+#'     \item{P}{P-value for enrichment significance.}
+#'     \item{FDR}{False discovery rate (adjusted P-value) for enrichment significance.}
+#'     \item{overlapGenes}{List of overlapping genes in the query and term sets.}
+#'     \item{maxOverlapGeneScore}{Maximum fitness score among overlapping genes, if `scoreMat` is provided.}
+#'     \item{cluster, id, size, formattedLabel}{Additional clustering and visualization information.}
+#'   }
+#'   \item{edgeMat}{Data frame for gene set term overlaps, including source, target, and overlap coefficients for visualization.}
+#' }
+#' @importFrom dplyr arrange desc
+#' @examples
+#' # Example usage:
+#' scoreMat <- compSCORE(mat, coln, sig = sig)
+#' curr_exp <- colnames(mat)[coln]
+#' hresp <- GOenrichment::runGORESP(fdrThresh = 0.2, scoreMat = scoreMat,
+#'   coln = 1, curr_exp = "test", sig = 1,
+#'   bp_input = hGOBP.gmt, go_input = NULL, minSetSize = 20,
+#'   maxSetSize = 300)
+#' @export
+runGORESP <- function (scoreMat, coln, curr_exp = colnames(mat)[coln], sig = 1,
     fdrThresh = 0.2, bp_path = NULL, bp_input = NULL, go_path = NULL,
-    go_input = NULL, minSetSize = 5, maxSetSize = 300)
-{
+    go_input = NULL, minSetSize = 5, maxSetSize = 300){
+
     CLUST.COL <- c("#FF00CC", "#33CCFF", "#33CC00", "#9900FF",
         "#FF9900", "#FFFF00", "#FFCCFF", "#FF0000", "#006600",
         "#009999", "#CCCC00", "#993300", "#CC99CC", "#6699CC",
@@ -197,21 +238,10 @@ runGORESP <- function (mat, coln, curr_exp = colnames(mat)[coln], sig = 1,
         output = list(enrichInfo = enrichInfo, edgeMat = edgeMat)
         return(output)
     }
-    compSCORE <- function(mat, coln, sig = 1) {
-        df = data.frame(score = mat[, coln], stringsAsFactors = F)
-        df$gene = rownames(mat)
-        rownames(df) = df$gene
-        df$index = 0
-        wdf = which(df$score >= sig)
-        df$index[wdf] = 1
-        df = df[, c("index", "score", "gene")]
-        df = dplyr::arrange(df, dplyr::desc(score))
-        df
-    }
-    score = compSCORE(mat, coln, sig = sig)
+
     fdrThresh = as.numeric(fdrThresh)
     bp_file = file.path(bp_path)
-    scoreMat = score
+
     queryGenes.mn <- sort(unique(scoreMat$gene[which(scoreMat$index ==
         1)]))
     uniGenes.mn <- sort(unique(scoreMat$gene[!is.na(scoreMat$score)]))
@@ -222,7 +252,7 @@ runGORESP <- function (mat, coln, curr_exp = colnames(mat)[coln], sig = 1,
         bp <- readRDS(bp_file)
     }
     enrichMat.mn <- hyperG(querySet = queryGenes.mn, geneSets = bp,
-        uni = uniGenes.mn, scoreMat = score, minSetSize = minSetSize,
+        uni = uniGenes.mn, scoreMat = scoreMat, minSetSize = minSetSize,
         maxSetSize = maxSetSize, uniSize = NA)
     curr_exp = colnames(mat)[coln]
     queryGeneSets = list()
