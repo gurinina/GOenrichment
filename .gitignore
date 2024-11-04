@@ -6,6 +6,8 @@
 .Rproj.user/
 
 INDEX
+data-raw/*
+!data-raw/prepare_datasets.R
 
 
 # Project files
