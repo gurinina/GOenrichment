@@ -14,14 +14,18 @@ runNetwork <- function(nodes, edges, height = 1300, main = list(text = nodes$fil
     style = "font-size:40px;text-align:center;")) {
     n <- nodes %>% dplyr::arrange(term)
     names <- n$id
-    visNetwork(nodes, edges, width = "100%", height = height, main = main) %>%
-        visNodes(shadow = list(enabled = TRUE, size = 25)) %>%
-        visOptions(highlightNearest = list(enabled = TRUE, degree = 5, hover = TRUE),
-                   nodesIdSelection = list(enabled = TRUE, values = names,
-                   style = "width: 400px; height: 31px; font-size: 18px;
-                     color: #000066;border: 3px solid #4d88ff;"),
-                   selectedBy = list(variable = "FDR", style = "width: 400px;
-                     height: 31px; font-size: 18px; color: #000066;
-                     border: 3px solid #4d88ff;")) %>%
-        visIgraphLayout(type = "full")
+visNetwork(vis$nodes, vis$edges, width = "100%") %>%
+    visNodes(shadow=list(enabled=T,size = 25)) %>%
+    visOptions(
+        highlightNearest = list(enabled = T,
+        degree = 5, hover = T),
+        nodesIdSelection = list(enabled = TRUE, values = names,
+        style = 'width: 400px; height = 31px;
+        font-size: 18px;
+        color: #000066;border: 3px solid #4d88ff;'),
+        selectedBy = list(variable="FDR",
+        style = 'width: 400px; height = 31px;
+        font-size: 18px;
+        color: #000066;border: 3px solid #4d88ff;')) %>%
+    visIgraphLayout(type = "full", physics = TRUE)
 }
