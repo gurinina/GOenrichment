@@ -6,3 +6,5 @@
 ^help$
 ^html$
 ^\.Rproj\.user$
+^data-raw$
+^.*\.tar\.gz$
