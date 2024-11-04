@@ -5,6 +5,9 @@
 .Rapp.history
 .Rproj.user/
 
+INDEX
+
+
 # Project files
 *.RProj
 
@@ -31,3 +34,7 @@ vignettes/*.pdf
 .DS_Store
 docs/
 po/*~
+
+/help/
+/html/
+/extdata/
