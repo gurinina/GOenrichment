@@ -1,5 +1,5 @@
 #' Computes Gene Ontology enrichment using the hypergeometric test
-#' @import dplyr
+#'
 #' The `hyperG` function identifies enriched gene sets by comparing a query set of genes with significant fitness defect scores to a background universe of genes. The hypergeometric test assesses the significance of overlap between the query set and predefined gene sets.
 #'
 #' @param querySet Character vector of genes in the query set with significant fitness scores.

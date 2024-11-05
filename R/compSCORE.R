@@ -1,5 +1,4 @@
 #' Calculate Significant Fitness Scores
-#' @import dplyr
 #' The `compSCORE` function evaluates a matrix of fitness scores to identify
 #' genes with scores above a specified significance threshold.
 #'

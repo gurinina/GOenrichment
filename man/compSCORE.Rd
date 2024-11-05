@@ -22,8 +22,7 @@ A data frame with three columns:
 }
 }
 \description{
-The `compSCORE` function evaluates a matrix of fitness scores to identify
-genes with scores above a specified significance threshold.
+Calculate Significant Fitness Scores
 }
 \examples{
 # Example usage:
