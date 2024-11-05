@@ -9,9 +9,12 @@
 #' visSetup(enrichInfo, edgeMat)
 #' @export
 visSetup = function(enrichInfo, edgeMat, fontsize = 22, fontface = "Arial") {
-
+  library(dplyr)
   library(igraph)
   library(visNetwork)
+
+  message("dplyr loaded: ", "dplyr" %in% loadedNamespaces())
+
   n = enrichInfo
   e = edgeMat
 
@@ -47,8 +50,11 @@ visSetup = function(enrichInfo, edgeMat, fontsize = 22, fontface = "Arial") {
 
   w = which(duplicated(vis$nodes$FDR))
   if (length(w) > 0) {
-    vis$nodes =  vis$nodes %>% dplyr::group_by(FDR) %>%
-      dplyr::mutate(jitter = if (n() > 1) abs(jitter(FDR)) else (FDR))
+
+    vis$nodes <- dplyr::group_by(vis$nodes, FDR)
+    vis$nodes <- dplyr::mutate(vis$nodes, jitter = if (dplyr::n() > 1) abs(jitter(FDR)) else FDR)
+    vis$nodes <- dplyr::ungroup(vis$nodes)
+
 
     w = which(names(vis$nodes) == "FDR")
     vis$nodes = vis$nodes[, -w]
