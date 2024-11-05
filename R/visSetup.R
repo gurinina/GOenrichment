@@ -1,4 +1,5 @@
 #' Prepare network data for gene visualization using visNetwork
+#' @importFrom dplyr mutate arrange group_by
 #' This function processes the output of `runGORESP` (`enrichInfo` and `edgeMat`) to create formatted nodes and edges for use in visNetwork.
 #' @param enrichInfo Data frame of enrichment information, as produced by `runGORESP`.
 #' @param edgeMat Data frame of edges, showing relationships between nodes, as produced by `runGORESP`.
@@ -47,7 +48,7 @@ visSetup = function(enrichInfo, edgeMat, fontsize = 22, fontface = "Arial") {
 
   w = which(duplicated(vis$nodes$FDR))
   if (length(w) > 0) {
-    vis$nodes =  vis$nodes %>% group_by(FDR) %>% dplyr::mutate(
+    vis$nodes =  vis$nodes %>% dplyr::group_by(FDR) %>% dplyr::mutate(
       jitter = if (n() > 1)
         abs(jitter(FDR))
       else
