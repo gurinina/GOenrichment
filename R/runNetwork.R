@@ -1,4 +1,5 @@
 #' Visualize a gene network using visNetwork
+#' @import dplyr
 #' This function visualizes a gene network from GO enrichment analysis results.
 #' It requires pre-processed node and edge data to create an interactive network plot.
 #' @param nodes data.frame; contains node information for the network (see `runGORESP` enrichInfo output).

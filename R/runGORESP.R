@@ -1,4 +1,5 @@
 #' GO enrichment analysis using the hypergeometric test
+#' @import dplyr
 #' Performs a GO enrichment analysis using the hypergeometric test for a set of query genes that pass a user-defined fitness score threshold. It compares the query genes against a background set (universe) and outputs enrichment and clustering information.
 #'
 #' @param scoreMat Data frame with gene scores. The first column is "gene," the second is "index" (indicating significance with 1 or 0), and the third is "score" (fitness scores in descending order).
