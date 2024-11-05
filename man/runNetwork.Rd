@@ -2,7 +2,9 @@
 % Please edit documentation in R/runNetwork.R
 \name{runNetwork}
 \alias{runNetwork}
-\title{Visualize a gene network using visNetwork}
+\title{Visualize a gene network using visNetwork
+This function visualizes a gene network from GO enrichment analysis results.
+It requires pre-processed node and edge data to create an interactive network plot.}
 \usage{
 runNetwork(
   nodes,
@@ -25,6 +27,8 @@ No return value, called for side effects. Generates an interactive network visua
 }
 \description{
 Visualize a gene network using visNetwork
+This function visualizes a gene network from GO enrichment analysis results.
+It requires pre-processed node and edge data to create an interactive network plot.
 }
 \examples{
 # Assuming `nodes` and `edges` are data frames obtained from `runGORESP`

@@ -1,10 +1,9 @@
-#' GOenrichment: GO Enrichment Visualization Tool
+#' GOenrichment: A Package for GO Enrichment Visualization
 #'
-#' This package provides tools to perform and visualize GO enrichment analysis.
+#' Provides functions for visualizing GO enrichment results using `visNetwork` and `igraph`.
 #'
-#' @docType package
-#' @name GOenrichment
 #' @import dplyr
-#' @import visNetwork
 #' @import igraph
-NULL
+#' @import visNetwork
+#' @importFrom dplyr %>%
+"_PACKAGE"

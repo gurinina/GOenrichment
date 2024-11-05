@@ -2,7 +2,8 @@
 % Please edit documentation in R/visSetup.R
 \name{visSetup}
 \alias{visSetup}
-\title{Prepare network data for gene visualization using visNetwork}
+\title{Prepare network data for gene visualization using visNetwork
+This function processes the output of `runGORESP` (`enrichInfo` and `edgeMat`) to create formatted nodes and edges for use in visNetwork.}
 \usage{
 visSetup(enrichInfo, edgeMat, fontsize = 22, fontface = "Arial")
 }
@@ -20,6 +21,7 @@ A list with two formatted data frames: `nodes` (containing attributes for each n
 }
 \description{
 Prepare network data for gene visualization using visNetwork
+This function processes the output of `runGORESP` (`enrichInfo` and `edgeMat`) to create formatted nodes and edges for use in visNetwork.
 }
 \examples{
 visSetup(enrichInfo, edgeMat)

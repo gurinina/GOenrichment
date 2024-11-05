@@ -43,7 +43,7 @@ Data frame of enrichment results, sorted by increasing FDR value.
 }
 }
 \description{
-Computes Gene Ontology enrichment using the hypergeometric test
+The `hyperG` function identifies enriched gene sets by comparing a query set of genes with significant fitness defect scores to a background universe of genes. The hypergeometric test assesses the significance of overlap between the query set and predefined gene sets.
 }
 \examples{
 queryGenes.mn <- sort(unique(scoreMat$gene[which(scoreMat$index == 1)]))

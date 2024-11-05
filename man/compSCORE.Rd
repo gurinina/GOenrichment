@@ -2,7 +2,9 @@
 % Please edit documentation in R/compSCORE.R
 \name{compSCORE}
 \alias{compSCORE}
-\title{Calculate Significant Fitness Scores}
+\title{Calculate Significant Fitness Scores
+The `compSCORE` function evaluates a matrix of fitness scores to identify
+genes with scores above a specified significance threshold.}
 \usage{
 compSCORE(mat, coln, sig = 1)
 }
@@ -23,6 +25,8 @@ A data frame with three columns:
 }
 \description{
 Calculate Significant Fitness Scores
+The `compSCORE` function evaluates a matrix of fitness scores to identify
+genes with scores above a specified significance threshold.
 }
 \examples{
 # Example usage:
