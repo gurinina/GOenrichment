@@ -5,5 +5,4 @@
 #' @import dplyr
 #' @import igraph
 #' @import visNetwork
-#' @importFrom dplyr %>%
 "_PACKAGE"

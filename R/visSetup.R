@@ -47,12 +47,8 @@ visSetup = function(enrichInfo, edgeMat, fontsize = 22, fontface = "Arial") {
 
   w = which(duplicated(vis$nodes$FDR))
   if (length(w) > 0) {
-    vis$nodes =  vis$nodes %>% dplyr::group_by(FDR) %>% dplyr::mutate(
-      jitter = if (n() > 1)
-        abs(jitter(FDR))
-      else
-        (FDR)
-    )
+    vis$nodes =  vis$nodes %>% dplyr::group_by(FDR) %>%
+      dplyr::mutate(jitter = if (n() > 1) abs(jitter(FDR)) else (FDR))
 
     w = which(names(vis$nodes) == "FDR")
     vis$nodes = vis$nodes[, -w]
