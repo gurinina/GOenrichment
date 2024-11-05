@@ -2,7 +2,8 @@
 % Please edit documentation in R/runGORESP.R
 \name{runGORESP}
 \alias{runGORESP}
-\title{GO enrichment analysis using the hypergeometric test}
+\title{GO enrichment analysis using the hypergeometric test
+Performs a GO enrichment analysis using the hypergeometric test for a set of query genes that pass a user-defined fitness score threshold. It compares the query genes against a background set (universe) and outputs enrichment and clustering information.}
 \usage{
 runGORESP(
   scoreMat,
@@ -57,6 +58,7 @@ List containing:
 }
 \description{
 GO enrichment analysis using the hypergeometric test
+Performs a GO enrichment analysis using the hypergeometric test for a set of query genes that pass a user-defined fitness score threshold. It compares the query genes against a background set (universe) and outputs enrichment and clustering information.
 }
 \examples{
 # Example usage:
