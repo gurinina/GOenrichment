@@ -10,7 +10,7 @@ runNetwork(
   nodes,
   edges,
   height = 1300,
-  main = list(text = nodes$filename[1], style = "font-size:40px;text-align:center;")
+  main = "Network of GO Enrichment Results"
 )
 }
 \arguments{

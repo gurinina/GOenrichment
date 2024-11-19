@@ -13,8 +13,6 @@ visSetup = function(enrichInfo, edgeMat, fontsize = 22, fontface = "Arial") {
   library(igraph)
   library(visNetwork)
 
-  message("dplyr loaded: ", "dplyr" %in% loadedNamespaces())
-
   n = enrichInfo
   e = edgeMat
 
@@ -23,17 +21,17 @@ visSetup = function(enrichInfo, edgeMat, fontsize = 22, fontface = "Arial") {
   n = n[, c(w, coln)]
 
   if (is.null(e) & !is.null(n)) {
-    gr = make_empty_graph(nrow(enrichInfo))
+    gr = igraph::make_empty_graph(nrow(enrichInfo))
     v = gr
     V(v)$color.background = n$cluster
-    v = set_vertex_attr(v, "label", value = n$formattedLabel)
+    v = igraph::set_vertex_attr(v, "label", value = n$formattedLabel)
 
   }
 
 
   if (!is.null(e) & !is.null(n)) {
     w = which(names(e) == "label")
-    let = graph_from_data_frame(e[, -w], vertices = n, directed = F)
+    let = igraph::graph_from_data_frame(e[, -w], vertices = n, directed = F)
     v = set_vertex_attr(let, "label", value = n$formattedLabel)
     V(v)$color.background = n$cluster
   }
@@ -65,8 +63,6 @@ visSetup = function(enrichInfo, edgeMat, fontsize = 22, fontface = "Arial") {
 
   w = which(duplicated(vis$nodes$FDR))
 
-
-
   vis$nodes$term = n$term[m]
   vis$nodes$interSect = n$interSect[m]
   vis$nodes$nQuery= n$nQuery[m]
@@ -84,7 +80,8 @@ visSetup = function(enrichInfo, edgeMat, fontsize = 22, fontface = "Arial") {
     vis$edges$color = "black"
 
   vis$nodes$borderWidthSelected	= 4
-  w = which(names(vis$nodes) %in% c("fomattedLabel", "color", "cluster"))
+  w = which(names(vis$nodes) %in%
+      c("fomattedLabel", "color", "cluster"))
   if (length(w) > 0)  vis$nodes = vis$nodes[, -w]
   vis$nodes$color.highlight.border = "#000066"
   vis$nodes$color.highlight.background = "#c0b3ff"
