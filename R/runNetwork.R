@@ -10,11 +10,10 @@
 #' # Assuming `nodes` and `edges` are data frames obtained from `runGORESP`
 #' runNetwork(nodes, edges, height = 1300, main = list(text = nodes$filename[1], style = "font-size:40px;text-align:center;"))
 #' @export
-runNetwork <- function(nodes, edges, height = 1300, main = list(text = nodes$filename[1],
-    style = "font-size:40px;text-align:center;")) {
+runNetwork <- function(nodes, edges, height = 1300, main = "Network of GO Enrichment Results") {
     n <- nodes %>% dplyr::arrange(term)
     names <- n$id
-visNetwork(vis$nodes, vis$edges, width = "100%") %>%
+visNetwork(nodes, edges, width = "100%", main = main) %>%
     visNodes(shadow=list(enabled=T,size = 25)) %>%
     visOptions(
         highlightNearest = list(enabled = T,
